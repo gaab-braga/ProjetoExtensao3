@@ -1,0 +1,156 @@
+{
+  "fonte": "IBGE — Pesquisa Nacional de Saúde 2019 (microdados)",
+  "arquivo": "PNS_2019_20220525.zip",
+  "etapas": {
+    "0_registros_no_arquivo": 293726,
+    "1_morador_selecionado_V0025A": 94114,
+    "2_entrevista_realizada_M001": 90846,
+    "3_peso_valido": 90846,
+    "4_idade_15_mais": 90846,
+    "removidos_filtros": 3268,
+    "5_casos_completos_tela_phq9": 90846,
+    "excluidos_por_nulo_tela_ou_phq9": 0
+  },
+  "layout": {
+    "conferido": true,
+    "arquivo": "input_PNS_2019.txt"
+  },
+  "distribuicao_codigos_brutos": {
+    "P04501": {
+      "1.0": 18188,
+      "2.0": 25103,
+      "3.0": 19097,
+      "4.0": 14419,
+      "5.0": 5300,
+      "6.0": 8739
+    },
+    "P04502": {
+      "1.0": 15597,
+      "2.0": 15590,
+      "3.0": 11032,
+      "4.0": 10920,
+      "5.0": 7167,
+      "6.0": 30540
+    },
+    "N010": {
+      "1.0": 58090,
+      "2.0": 16039,
+      "3.0": 5773,
+      "4.0": 10944
+    },
+    "N011": {
+      "1.0": 57069,
+      "2.0": 20770,
+      "3.0": 5798,
+      "4.0": 7209
+    },
+    "N012": {
+      "1.0": 64938,
+      "2.0": 17410,
+      "3.0": 4129,
+      "4.0": 4369
+    },
+    "N013": {
+      "1.0": 71748,
+      "2.0": 12424,
+      "3.0": 3386,
+      "4.0": 3288
+    },
+    "N014": {
+      "1.0": 71898,
+      "2.0": 10869,
+      "3.0": 4019,
+      "4.0": 4060
+    },
+    "N015": {
+      "1.0": 74489,
+      "2.0": 9973,
+      "3.0": 3237,
+      "4.0": 3147
+    },
+    "N016": {
+      "1.0": 66294,
+      "2.0": 15888,
+      "3.0": 4324,
+      "4.0": 4340
+    },
+    "N017": {
+      "1.0": 76160,
+      "2.0": 9328,
+      "3.0": 2682,
+      "4.0": 2676
+    },
+    "N018": {
+      "1.0": 86530,
+      "2.0": 2694,
+      "3.0": 845,
+      "4.0": 777
+    },
+    "Q092": {
+      "1.0": 8332,
+      "2.0": 82514
+    },
+    "Q11006": {
+      "1.0": 4905,
+      "2.0": 85941
+    },
+    "C006": {
+      "1": 42799,
+      "2": 48047
+    }
+  },
+  "ignorados_9_convertidos_em_nulo": {
+    "P04501": 0,
+    "P04502": 0,
+    "N010": 0,
+    "N011": 0,
+    "N012": 0,
+    "N013": 0,
+    "N014": 0,
+    "N015": 0,
+    "N016": 0,
+    "N017": 0,
+    "N018": 0,
+    "Q092": 0,
+    "Q11006": 0,
+    "C006": 0
+  },
+  "nulos_por_coluna": {
+    "uf": 0,
+    "estrato": 0,
+    "upa": 0,
+    "peso": 0,
+    "zona_rural": 0,
+    "sexo": 0,
+    "sexo_feminino": 0,
+    "idade": 0,
+    "faixa_etaria": 0,
+    "raca_cor": 10,
+    "escolaridade": 0,
+    "renda_faixa": 22,
+    "internet_domicilio": 0,
+    "tela_lazer_ord": 0,
+    "tela_lazer_horas": 0,
+    "tela_lazer_cat": 0,
+    "tela_lazer_3h_mais": 0,
+    "tv_ord": 0,
+    "tv_horas": 0,
+    "phq_sono": 0,
+    "phq_cansaco": 0,
+    "phq_anedonia": 0,
+    "phq_concentracao": 0,
+    "phq_apetite": 0,
+    "phq_agitacao": 0,
+    "phq_humor_deprimido": 0,
+    "phq_autoestima": 0,
+    "phq_ideacao": 0,
+    "phq9_escore": 0,
+    "phq9_depressao": 0,
+    "phq9_gravidade": 0,
+    "concentracao_frequente": 0,
+    "sono_frequente": 0,
+    "agitacao_frequente": 0,
+    "diag_depressao": 0,
+    "diag_outro_transtorno_mental": 0
+  }
+}

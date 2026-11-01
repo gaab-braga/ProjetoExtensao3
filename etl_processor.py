@@ -181,8 +181,12 @@ def para_peso(s: pd.Series) -> pd.Series:
 # Transformação
 # ---------------------------------------------------------------------------
 def validar_codigos(df: pd.DataFrame, var: str, validos: set[int], rel: dict) -> None:
+    """Registra a distribuição bruta, converte 9 = 'Ignorado' (dicionário IBGE) em nulo e aborta se houver código desconhecido."""
     contagem = df[var].value_counts(dropna=False).sort_index()
     rel.setdefault("distribuicao_codigos_brutos", {})[var] = {str(k): int(v) for k, v in contagem.items()}
+    if 9 not in validos:
+        rel.setdefault("ignorados_9_convertidos_em_nulo", {})[var] = int((df[var] == 9).sum())
+        df.loc[df[var] == 9, var] = np.nan
     invalidos = set(df[var].dropna().astype(int)) - validos
     if invalidos:
         sys.exit(f"[ERRO] {var} tem códigos inesperados {sorted(invalidos)}. "

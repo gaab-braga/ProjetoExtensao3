@@ -300,6 +300,42 @@ def grafico_barras_idade(prev_uso: pd.DataFrame, prev_dep_idade: pd.DataFrame) -
     plt.close(fig)
 
 
+def grafico_dose_resposta(modelos: dict) -> None:
+    """OR ajustado por faixa de tela (ref. <1h) — evidencia a curva em J que a correlação linear não capta."""
+    ordem = ["Não usa", "<1h", "1–2h", "2–3h", "3–6h", "6h+"]
+    series = [("PHQ-9>=10 ~ faixas de tela (ref. <1h)", "Rastreio de depressão (PHQ-9 ≥ 10)", AZUL, "o"),
+              ("Concentração frequente ~ faixas de tela (ref. <1h)", "Dificuldade de concentração frequente", "#eb6834", "s")]
+    fig, ax = plt.subplots(figsize=(11, 5.4))
+    ax.axhline(1, color=AXIS, lw=1.2, zorder=1)
+    for i, (chave, rotulo, cor, marc) in enumerate(series):
+        coefs = modelos[chave]["coeficientes"]
+        ors, lo, hi = [], [], []
+        for cat in ordem:
+            if cat == "<1h":
+                ors.append(1.0); lo.append(1.0); hi.append(1.0)
+            else:
+                c = coefs[f"tela_cat[T.{cat}]"]
+                ors.append(c["OR"]); lo.append(c["ic95"][0]); hi.append(c["ic95"][1])
+        x = np.arange(6) + (i - 0.5) * 0.18
+        ors, lo, hi = map(np.array, (ors, lo, hi))
+        ax.errorbar(x, ors, yerr=[ors - lo, hi - ors], fmt=marc, color=cor, ms=9, lw=2, capsize=4,
+                    markeredgecolor=SURFACE, markeredgewidth=2, label=rotulo, zorder=3)
+        ax.plot(x[1:], ors[1:], color=cor, lw=1.2, alpha=0.6, zorder=2)
+        ax.annotate(f"OR {ors[-1]:.2f}", (x[-1], hi[-1]), xytext=(0, 6), textcoords="offset points",
+                    ha="center", fontsize=9, color=INK2)
+    ax.set_xticks(range(6)); ax.set_xticklabels(ordem)
+    ax.set_xlabel("Tempo livre/dia em celular, tablet ou computador para lazer (PNS P04502)")
+    ax.set_ylabel("Odds ratio ajustado (IC 95%) — ref. < 1h/dia")
+    ax.set_title("Ajustado por sexo, idade, escolaridade, renda, TV e zona rural; pesos amostrais da PNS",
+                 loc="left", fontsize=10, color=INK2, fontweight="normal")
+    ax.legend(loc="upper left")
+    fig.suptitle("Dose-resposta: o risco sobe a partir de 3h/dia e é máximo em 6h+ — PNS 2019 (IBGE)",
+                 x=0.01, ha="left", fontsize=13, fontweight="bold")
+    fig.tight_layout()
+    fig.savefig(GRAF / "05_dose_resposta_OR.png", dpi=160)
+    plt.close(fig)
+
+
 # ===========================================================================
 # Relatório
 # ===========================================================================
@@ -332,6 +368,12 @@ def escrever_markdown(res: dict) -> None:
         for t, c in mod["coeficientes"].items():
             L.append(f"| {t} | {c['OR']:.2f} | [{c['ic95'][0]:.2f}; {c['ic95'][1]:.2f}] | {fmt_p(c['p'])} |")
         L.append("")
+    L += ["## 4b. Sensibilidade — apenas usuários de tela (exclui 'não usa')", "",
+          "| Recorte | ρ | IC 95% | p | n |", "|---|---:|---|---:|---:|"]
+    for k, c in res["sensibilidade_apenas_usuarios"].items():
+        rho = c.get("rho", c.get("rho_parcial"))
+        L.append(f"| {k} | {rho:.3f} | [{c['ic95'][0]:.3f}; {c['ic95'][1]:.3f}] | {fmt_p(c['p'])} | {c['n']:,} |")
+    L += ["", "## 4c. Perfil por faixa de tela", "", pd.DataFrame(res["perfil_por_faixa_de_tela"]).to_markdown(index=False), ""]
     L += ["## 5. Prevalências ponderadas", ""]
     for nome, tab in res["prevalencias"].items():
         L += [f"**{nome}**", "", pd.DataFrame(tab).round(2).to_markdown(index=False), ""]
@@ -406,13 +448,42 @@ def main() -> None:
             df.assign(jovem=df["faixa_etaria"].isin(["15–17", "18–24"]).astype(int)),
             "phq9_depressao ~ tela_lazer_3h_mais * jovem + sexo_feminino + escolaridade + C(renda_faixa) + tv_ord + zona_rural"),
     }
+    res["regressoes_logisticas"]["Diag. ansiedade/outros (Q11006) ~ faixas de tela (ref. <1h)"] = logit_ponderado(
+        df, f"diag_outro_transtorno_mental ~ tela_cat + {ctrl}")
+    # Jovens: poucos usam <1h (referência instável) -> tendência ordinal entre usuários, por faixa etária
+    for rot, faixas in [("15-24", ["15–17", "18–24"]), ("25-44", ["25–34", "35–44"]), ("45+", ["45–59", "60+"])]:
+        sub = df[df["faixa_etaria"].isin(faixas) & (df["tela_lazer_ord"] >= 1)]
+        res["regressoes_logisticas"][f"Usuários {rot} anos: PHQ-9>=10 ~ tendência por faixa de tela"] = logit_ponderado(
+            sub, "phq9_depressao ~ tela_lazer_ord + sexo_feminino + idade + escolaridade + C(renda_faixa) + tv_ord + zona_rural")
     res["regressao_linear_phq9"] = ols_ponderado(df, f"phq9_escore ~ tela_lazer_ord + {ctrl}")
+
+    # --- 4b. Sensibilidade: apenas usuários (exclui "não usa", grupo de perfil distinto) ----
+    usuarios = df[df["tela_lazer_ord"] >= 1]
+    sens = {"todas_idades": spearman_ic(usuarios["tela_lazer_ord"], usuarios["phq9_escore"]),
+            "parcial_todas_idades": spearman_parcial(usuarios, "tela_lazer_ord", "phq9_escore", controles),
+            "concentracao_todas_idades": spearman_ic(usuarios["tela_lazer_ord"], usuarios["phq_concentracao"])}
+    for f in FAIXAS:
+        s = usuarios[usuarios.faixa_etaria == f]
+        sens[f"idade={f}"] = spearman_ic(s["tela_lazer_ord"], s["phq9_escore"])
+    res["sensibilidade_apenas_usuarios"] = sens
+
+    # --- 4c. Perfil de cada faixa de tela (explica o confundimento do grupo "não usa") ----
+    perfil = []
+    for k in range(6):
+        g = df[df["tela_lazer_ord"] == k]
+        perfil.append({"tela": TELA_ROTULO[k], "n": len(g),
+                       "idade_media": round(float(np.average(g["idade"], weights=g["peso"])), 1),
+                       "pct_60_mais": round(100 * media_amostral(g.assign(v=(g["idade"] >= 60).astype(int)), "v")[0], 1),
+                       "pct_ate_1SM": round(100 * media_amostral(g.assign(v=(g["renda_faixa"] <= 3).astype(float).where(g["renda_faixa"].notna())), "v")[0], 1),
+                       "pct_mulheres": round(100 * media_amostral(g, "sexo_feminino")[0], 1)})
+    res["perfil_por_faixa_de_tela"] = perfil
 
     # --- 5. Gráficos --------------------------------------------------------
     grafico_scatter(df, {"tela_x_phq9": cor["tela_x_phq9"], "tela_x_concentracao": cor["tela_x_concentracao"]})
     res["matriz_spearman"] = grafico_heatmap(df).round(4).to_dict()
     grafico_barras_sexo(prev_dep, prev_conc)
     grafico_barras_idade(prev_uso, prev_dep_idade)
+    grafico_dose_resposta(res["regressoes_logisticas"])
 
     (OUT / "resultados_estatisticos.json").write_text(json.dumps(res, ensure_ascii=False, indent=2, default=float))
     escrever_markdown(res)

@@ -1,10 +1,15 @@
 # Passo 2 — Aquisição dos microdados (CHECK-POINT)
 
-## Status: ⛔ download automático bloqueado
+## Status: ✅ concluído (01/11/2026)
 
-O ambiente de nuvem onde o pipeline foi construído **bloqueia por política de rede** os domínios
-`ftp.ibge.gov.br`, `www.ibge.gov.br`, `cetic.br`, `datasus.saude.gov.br`, `basedosdados.org` e `kaggle.com`.
-Os dicionários foram mapeados por espelhos públicos no GitHub, mas os **microdados (~450 MB)** precisam ser baixados de uma destas formas:
+Arquivos baixados diretamente do FTP oficial do IBGE após a liberação do domínio no ambiente:
+
+| Arquivo | Tamanho | Conteúdo |
+|---|---:|---|
+| `PNS_2019_20220525.zip` | 29,5 MB (455 MB descompactado) | `PNS_2019.txt`, com 293.726 registros de posição fixa |
+| `Dicionario_e_input_20220530.zip` | 172 KB | `dicionario_PNS_microdados_2019.xls`, `input_PNS_2019.txt`, `input_PNS_2019.sas` |
+
+Para reproduzir em outra máquina, siga uma das opções abaixo.
 
 ### Opção A — Baixar manualmente (≈ 5 minutos)
 

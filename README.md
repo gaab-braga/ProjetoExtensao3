@@ -11,10 +11,14 @@
 | Passo | Arquivo | Status |
 |---|---|---|
 | 1. Data Discovery | `docs/01_Data_Discovery.md` | ✅ concluído |
-| 2. Aquisição | `docs/02_Aquisicao_Dados.md` | ⛔ aguardando download manual dos microdados do IBGE |
-| 3. ETL | `etl_processor.py` | ✅ pronto e testado (layout de posição fixa do IBGE) |
-| 4. Análise estatística | `analise_exploratoria.py` | ✅ pronto e testado |
-| 5. Dossiê | `Dossie_Evidencias_Quantitativas.md` + `outputs/graficos/*.png` | ⏳ será gerado com os dados reais |
+| 2. Aquisição | `docs/02_Aquisicao_Dados.md` | ✅ baixado do FTP oficial do IBGE |
+| 3. ETL | `etl_processor.py` | ✅ 90.846 respondentes; layout e códigos conferidos com o dicionário oficial |
+| 4. Análise estatística | `analise_exploratoria.py` | ✅ correlações, confundidores, regressões, gráficos |
+| 5. Dossiê | [`Dossie_Evidencias_Quantitativas.md`](Dossie_Evidencias_Quantitativas.md) + `outputs/graficos/*.png` | ✅ entregue |
+| Standup | [`docs/03_Guia_Standup.md`](docs/03_Guia_Standup.md) | ✅ roteiro e papel de cada arquivo |
+
+## Principal achado
+A correlação linear é desprezível (ρ = 0,02), mas existe um **limiar**: acima de 3h/dia de tela de lazer o risco sobe, e com **6h+/dia** as chances são **72% maiores para depressão (PHQ-9 ≥ 10)** e **62% maiores para dificuldade de concentração** (ajustado). **59%** dos adolescentes de 15–17 anos usam 3h+/dia, e as mulheres têm 2,5× mais sintomas (ODS 5).
 
 ## Como rodar
 ```bash
