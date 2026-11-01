@@ -19,6 +19,7 @@ Saídas:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import io
 import json
 import re
@@ -54,6 +55,9 @@ LAYOUT: dict[str, tuple[int, int]] = {
     "VDD004A": (1514, 1),   # Nível de instrução (1 sem instrução ... 7 superior completo)
     "VDF004": (1535, 1),    # Faixa de rendimento domiciliar per capita (em salários mínimos)
     "A01901": (81, 1),      # Algum morador tem acesso à internet no domicílio
+    "C011": (133, 1),       # Estado civil (1 casado, 2 divorciado/separado, 3 viúvo, 4 solteiro)
+    "VDE001": (1515, 1),    # Condição na força de trabalho (1 na força, 2 fora)
+    "VDE002": (1516, 1),    # Condição de ocupação (1 ocupado, 2 desocupado)
     # controle da entrevista individual
     "M001": (527, 1),       # Entrevista do adulto selecionado (1 = realizada)
     # PHQ-9 (Módulo N) — "Nas duas últimas semanas, com que frequência..."
@@ -94,10 +98,31 @@ TELA_ROTULO = {0: "Não usa", 1: "<1h", 2: "1–2h", 3: "2–3h", 4: "3–6h", 5
 PHQ_ORDINAL = {1: 0, 2: 1, 3: 2, 4: 3}
 
 SEXO = {1: "Homem", 2: "Mulher"}
+ESTADO_CIVIL = {1: "Casado", 2: "Divorciado/separado", 3: "Viúvo", 4: "Solteiro"}
+REGIAO = {1: "Norte", 2: "Nordeste", 3: "Sudeste", 4: "Sul", 5: "Centro-Oeste"}  # 1º dígito do código da UF
 RACA = {1: "Branca", 2: "Preta", 3: "Amarela", 4: "Parda", 5: "Indígena"}
 SIM_NAO = {1: 1, 2: 0}
 FAIXAS_IDADE = [(15, 17, "15–17"), (18, 24, "18–24"), (25, 34, "25–34"),
                 (35, 44, "35–44"), (45, 59, "45–59"), (60, 200, "60+")]
+
+
+def phq9_algoritmo(itens: pd.DataFrame) -> pd.Series:
+    """Algoritmo diagnóstico do PHQ-9 (Kroenke et al., 2001; critérios DSM para episódio depressivo maior):
+    >= 5 dos 9 sintomas em 'mais da metade dos dias' (escala 0–3 >= 2), sendo obrigatório humor deprimido (N016)
+    ou anedonia (N012); o item de ideação (N018) conta se presente em qualquer frequência (>= 1)."""
+    nucleo = ["phq_sono", "phq_cansaco", "phq_anedonia", "phq_concentracao", "phq_apetite",
+              "phq_agitacao", "phq_humor_deprimido", "phq_autoestima"]
+    n_sintomas = (itens[nucleo] >= 2).sum(axis=1) + (itens["phq_ideacao"] >= 1).astype(int)
+    cardinal = (itens["phq_anedonia"] >= 2) | (itens["phq_humor_deprimido"] >= 2)
+    return ((n_sintomas >= 5) & cardinal).astype(int)
+
+
+def sha256(caminho: Path) -> str:
+    h = hashlib.sha256()
+    with open(caminho, "rb") as fh:
+        for bloco in iter(lambda: fh.read(1 << 20), b""):
+            h.update(bloco)
+    return h.hexdigest()
 
 
 # ---------------------------------------------------------------------------
@@ -212,6 +237,7 @@ def transformar(df: pd.DataFrame, rel: dict) -> pd.DataFrame:
         validar_codigos(df, v, set(PHQ_ORDINAL), rel)
     for v in ("Q092", "Q11006", "C006"):
         validar_codigos(df, v, {1, 2}, rel)
+    validar_codigos(df, "C011", set(ESTADO_CIVIL), rel)
 
     out = pd.DataFrame(index=df.index)
     # identificação e desenho amostral
@@ -231,6 +257,10 @@ def transformar(df: pd.DataFrame, rel: dict) -> pd.DataFrame:
     out["escolaridade"] = df["VDD004A"].where(df["VDD004A"].between(1, 7)).astype("Int64")
     out["renda_faixa"] = df["VDF004"].where(df["VDF004"].between(1, 7)).astype("Int64")
     out["internet_domicilio"] = df["A01901"].map(SIM_NAO).astype("Int64")
+    out["regiao"] = (df["V0001"] // 10).map(REGIAO)
+    out["estado_civil"] = df["C011"].map(ESTADO_CIVIL)
+    out["ocupacao"] = np.select([df["VDE002"] == 1, df["VDE002"] == 2, df["VDE001"] == 2],
+                                ["Ocupado", "Desocupado", "Fora da força de trabalho"], default=None)
 
     # tecnologia
     out["tela_lazer_ord"] = df["P04502"].map(TELA_ORDINAL).astype("Int64")
@@ -250,6 +280,7 @@ def transformar(df: pd.DataFrame, rel: dict) -> pd.DataFrame:
     completo = out[itens].notna().all(axis=1)
     out["phq9_escore"] = out[itens].sum(axis=1, min_count=9).where(completo).astype("Int64")
     out["phq9_depressao"] = (out["phq9_escore"] >= 10).astype("Int64").where(completo)  # ponto de corte validado
+    out["phq9_algoritmo"] = phq9_algoritmo(out[itens]).astype("Int64").where(completo)  # validação externa (~5,7%)
     out["phq9_gravidade"] = pd.cut(out["phq9_escore"].astype(float), bins=[-1, 4, 9, 14, 19, 27],
                                    labels=["Mínima", "Leve", "Moderada", "Mod. grave", "Grave"]).astype(str)
     # déficit de atenção / sono frequentes = "mais da metade dos dias" ou "quase todos os dias"
@@ -279,6 +310,7 @@ def main() -> None:
     bruto = localizar_bruto(args.raw)
     rel: dict = {"fonte": "IBGE — Pesquisa Nacional de Saúde 2019 (microdados)", "arquivo": bruto.name, "etapas": {}}
     rel["layout"] = conferir_layout_com_input_sas(args.input)
+    rel["sha256_arquivo_bruto"] = sha256(bruto)
 
     print(f"[INFO] Lendo {bruto} …")
     df, total = ler_microdados(bruto)

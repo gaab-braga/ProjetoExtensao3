@@ -1,43 +1,53 @@
 """
-analise_exploratoria.py — Experimentos estatísticos do Dossiê de Evidências (Grupo 1).
+analise_exploratoria.py — Análise estatística do Dossiê de Evidências (Grupo 1).
 
 Entrada : data/processed/pns2019_telas_saude_mental.csv  (gerado por etl_processor.py)
-Saídas  : outputs/graficos/*.png
-          outputs/resultados_estatisticos.json
-          outputs/resultados_estatisticos.md
+Saídas  : outputs/graficos/01..06_*.png
+          outputs/resultados_estatisticos.json / .md
 
-Métodos
-  1. Correlação de Spearman (ordinal x ordinal) e Pearson (horas aproximadas x escore), com IC 95%.
-  2. Correlação parcial de Spearman controlando idade, sexo, escolaridade e renda (confundidores).
-  3. Prevalências ponderadas (peso V00291) com erro-padrão por linearização de Taylor
-     (estratos V0024 + UPA), i.e. respeitando o plano amostral complexo da PNS.
-  4. Regressão logística ponderada (OR ajustados, EP robusto por conglomerado/UPA):
-     PHQ-9 >= 10 e "dificuldade de concentração frequente" ~ tempo de tela + controles.
-  5. Teste de interação tela x sexo (pergunta do ODS 5) e comparação de correlações entre sexos.
+PLANO DE ANÁLISE (hierarquia declarada — ver docs/04_Rigor_Metodologico.md)
+  Exposição primária : P04502 (tempo livre/dia em celular, tablet ou computador para lazer), 6 categorias.
+  Desfecho primário  : rastreio positivo para depressão, PHQ-9 >= 10.
+  Hipótese primária  : H1 — entre usuários, mais tempo de tela associa-se a maior prevalência do desfecho
+                       primário (tendência dose-resposta), após ajuste por confundidores.
+  Secundários        : dificuldade de concentração frequente (N013 >= "mais da metade dos dias");
+                       diagnóstico autorreferido de ansiedade/outros transtornos (Q11006);
+                       interações tela x sexo e tela x idade (escalas multiplicativa e aditiva).
+                       -> correção de multiplicidade por Benjamini-Hochberg (FDR).
+  Exploratório       : limiar de 3h/dia (surgiu da inspeção dos dados; não é hipótese a priori).
+  Sensibilidade      : PHQ-9 por algoritmo; modelo estendido (estado civil, ocupação, região);
+                       E-value; specification curve (144 especificações).
+
+MÉTODOS
+  - Razão de prevalência (RP) por regressão de Poisson com variância robusta (Barros & Hirakata, 2003),
+    porque o desfecho é comum (~11%) e o OR o superestimaria.
+  - Toda inferência respeita o desenho complexo (estrato + UPA + peso), com estimação por domínio
+    (metodos_amostrais.py; validado em tests/).
+  - Correlações de Spearman/Pearson ficam como DESCRITIVAS.
 """
 from __future__ import annotations
 
 import json
 import warnings
+from itertools import product
 from pathlib import Path
 
 import matplotlib
+import matplotlib.ticker
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-import statsmodels.formula.api as smf
 import statsmodels.api as sm
 from matplotlib.colors import LinearSegmentedColormap
 from scipy import stats
+from statsmodels.stats.multitest import multipletests
+
+from metodos_amostrais import combinacao, e_value, fap, media_amostral, reri, svyglm, wald
 
 warnings.filterwarnings("ignore", category=FutureWarning)
-# GLM com var_weights + EP sanduíche por UPA: estimativas pontuais = pseudo-máxima verossimilhança ponderada;
-# o EP é uma aproximação ao desenho (conglomerado UPA, sem estratos -> levemente conservador).
-# Para confirmação formal do desenho completo, ver survey::svyglm no R (documentado no Dossiê).
-warnings.filterwarnings("ignore", message="cov_type not fully supported with var_weights")
 
 ROOT = Path(__file__).resolve().parent
 DADOS = ROOT / "data" / "processed" / "pns2019_telas_saude_mental.csv"
@@ -45,13 +55,25 @@ OUT = ROOT / "outputs"
 GRAF = OUT / "graficos"
 
 TELA_ROTULO = {0: "Não usa", 1: "<1h", 2: "1–2h", 3: "2–3h", 4: "3–6h", 5: "6h+"}
+ORDEM_TELA = ["Não usa", "<1h", "1–2h", "2–3h", "3–6h", "6h+"]
 FAIXAS = ["15–17", "18–24", "25–34", "35–44", "45–59", "60+"]
 
-# ---- paleta (validada: azul/laranja são par adjacente aprovado para daltonismo) ----
+CTRL_MIN = "sexo_feminino + C(faixa_etaria)"
+CTRL = "sexo_feminino + C(faixa_etaria) + escolaridade + C(renda_faixa) + tv_ord + zona_rural"
+CTRL_EXT = CTRL + " + C(estado_civil) + C(ocupacao) + C(regiao)"
+CTRL_SEM_IDADE = "sexo_feminino + escolaridade + C(renda_faixa) + tv_ord + zona_rural + idade"
+CTRL_SEM_SEXO = "C(faixa_etaria) + escolaridade + C(renda_faixa) + tv_ord + zona_rural"
+
+DESFECHOS = {"phq9_depressao": "Rastreio de depressão (PHQ-9 ≥ 10)",
+             "concentracao_frequente": "Dificuldade de concentração frequente (N013)",
+             "diag_outro_transtorno_mental": "Diagnóstico de ansiedade/outros transtornos (Q11006)"}
+
+# ---- paleta (validada: slots 1–3 passam todos os pares para daltonismo) ----
 SURFACE, INK, INK2, MUTED = "#fcfcfb", "#0b0b0b", "#52514e", "#898781"
 GRID, AXIS = "#e1e0d9", "#c3c2b7"
-COR_SEXO = {"Homem": "#2a78d6", "Mulher": "#eb6834"}
-AZUL, NEUTRO = "#2a78d6", "#b5b3ab"
+SERIES = ["#2a78d6", "#eb6834", "#1baf7a"]
+COR_SEXO = {"Homem": SERIES[0], "Mulher": SERIES[1]}
+AZUL, NEUTRO = SERIES[0], "#b5b3ab"
 DIVERGENTE = LinearSegmentedColormap.from_list("div", ["#184f95", "#6da7ec", "#f0efec", "#ef8a7e", "#b82d2c"])
 
 plt.rcParams.update({
@@ -65,17 +87,11 @@ plt.rcParams.update({
 
 
 # ===========================================================================
-# Utilitários estatísticos
+# Estatística descritiva (correlações)
 # ===========================================================================
 def classificar_efeito(r: float) -> str:
     a = abs(r)
-    if a < 0.10:
-        return "desprezível"
-    if a < 0.30:
-        return "fraca"
-    if a < 0.50:
-        return "moderada"
-    return "forte"
+    return "desprezível" if a < 0.10 else "fraca" if a < 0.30 else "moderada" if a < 0.50 else "forte"
 
 
 def spearman_ic(x: pd.Series, y: pd.Series) -> dict:
@@ -85,99 +101,36 @@ def spearman_ic(x: pd.Series, y: pd.Series) -> dict:
     rho, p = stats.spearmanr(x, y)
     se = np.sqrt((1 + rho**2 / 2) / (n - 3))          # Bonett & Wright (2000)
     z = np.arctanh(rho)
-    lo, hi = np.tanh(z - 1.96 * se), np.tanh(z + 1.96 * se)
-    return {"rho": float(rho), "ic95": [float(lo), float(hi)], "p": float(p), "n": int(n),
-            "efeito": classificar_efeito(rho)}
-
-
-def pearson_ic(x: pd.Series, y: pd.Series) -> dict:
-    m = x.notna() & y.notna()
-    res = stats.pearsonr(x[m].astype(float), y[m].astype(float))
-    ci = res.confidence_interval(0.95)
-    return {"r": float(res.statistic), "ic95": [float(ci.low), float(ci.high)], "p": float(res.pvalue),
-            "n": int(m.sum()), "efeito": classificar_efeito(res.statistic)}
+    return {"rho": float(rho), "ic95": [float(np.tanh(z - 1.96 * se)), float(np.tanh(z + 1.96 * se))],
+            "p": float(p), "n": int(n), "efeito": classificar_efeito(rho)}
 
 
 def spearman_parcial(df: pd.DataFrame, x: str, y: str, controles: list[str]) -> dict:
-    """Spearman parcial: Pearson entre resíduos dos postos de x e y regredidos nos postos dos controles."""
     d = df[[x, y] + controles].dropna().astype(float).rank()
     Z = sm.add_constant(d[controles].values)
     rx = d[x].values - Z @ np.linalg.lstsq(Z, d[x].values, rcond=None)[0]
     ry = d[y].values - Z @ np.linalg.lstsq(Z, d[y].values, rcond=None)[0]
     r = float(np.corrcoef(rx, ry)[0, 1])
     n, k = len(d), len(controles)
-    t = r * np.sqrt((n - 2 - k) / (1 - r**2))
-    p = float(2 * stats.t.sf(abs(t), n - 2 - k))
+    p = float(2 * stats.t.sf(abs(r * np.sqrt((n - 2 - k) / (1 - r**2))), n - 2 - k))
     se = 1 / np.sqrt(n - 3 - k)
-    lo, hi = np.tanh(np.arctanh(r) - 1.96 * se), np.tanh(np.arctanh(r) + 1.96 * se)
-    return {"rho_parcial": r, "ic95": [float(lo), float(hi)], "p": p, "n": n, "controles": controles,
-            "efeito": classificar_efeito(r)}
-
-
-def spearman_ponderado(df: pd.DataFrame, x: str, y: str, w: str = "peso") -> float:
-    d = df[[x, y, w]].dropna()
-    rx, ry, ww = d[x].rank().values, d[y].rank().values, d[w].values
-    mx, my = np.average(rx, weights=ww), np.average(ry, weights=ww)
-    cov = np.average((rx - mx) * (ry - my), weights=ww)
-    return float(cov / np.sqrt(np.average((rx - mx) ** 2, weights=ww) * np.average((ry - my) ** 2, weights=ww)))
-
-
-def comparar_correlacoes(a: dict, b: dict) -> dict:
-    za, zb = np.arctanh(a["rho"]), np.arctanh(b["rho"])
-    se = np.sqrt((1 + a["rho"] ** 2 / 2) / (a["n"] - 3) + (1 + b["rho"] ** 2 / 2) / (b["n"] - 3))
-    z = (za - zb) / se
-    return {"z": float(z), "p": float(2 * stats.norm.sf(abs(z)))}
-
-
-def media_amostral(d: pd.DataFrame, y: str) -> tuple[float, float, int]:
-    """Média/proporção ponderada + EP por linearização de Taylor (estrato + UPA, PSU c/ reposição)."""
-    d = d[[y, "peso", "estrato", "upa"]].dropna()
-    if d.empty:
-        return np.nan, np.nan, 0
-    w, v = d["peso"].values, d[y].astype(float).values
-    W = w.sum()
-    est = (w * v).sum() / W
-    z = w * (v - est) / W
-    tot = pd.DataFrame({"h": d["estrato"].values, "c": d["upa"].values, "z": z}).groupby(["h", "c"])["z"].sum()
-    var = 0.0
-    for _, g in tot.groupby(level=0):
-        nh = len(g)
-        if nh > 1:
-            var += nh / (nh - 1) * ((g - g.mean()) ** 2).sum()
-    return float(est), float(np.sqrt(var)), len(d)
+    return {"rho_parcial": r, "ic95": [float(np.tanh(np.arctanh(r) - 1.96 * se)), float(np.tanh(np.arctanh(r) + 1.96 * se))],
+            "p": p, "n": n, "controles": controles, "efeito": classificar_efeito(r)}
 
 
 def tabela_prevalencia(df: pd.DataFrame, y: str, grupos: list[str]) -> pd.DataFrame:
     linhas = []
-    for chave, g in df.groupby(grupos, observed=True):
-        est, se, n = media_amostral(g, y)
+    for chave, _ in df.groupby(grupos, observed=True):
         chave = chave if isinstance(chave, tuple) else (chave,)
+        dom = np.logical_and.reduce([df[g] == v for g, v in zip(grupos, chave)])
+        est, se, n = media_amostral(df, y, dominio=pd.Series(dom, index=df.index))
         linhas.append({**dict(zip(grupos, chave)), "pct": 100 * est, "ic_inf": 100 * (est - 1.96 * se),
                        "ic_sup": 100 * (est + 1.96 * se), "n": n})
     return pd.DataFrame(linhas)
 
 
-def logit_ponderado(df: pd.DataFrame, formula: str) -> dict:
-    vars_ = [v for v in df.columns if v in formula]
-    d = df[vars_ + ["peso", "upa"]].dropna().copy()
-    d["w"] = d["peso"] / d["peso"].mean()
-    mod = smf.glm(formula, data=d, family=sm.families.Binomial(), var_weights=d["w"]).fit(
-        cov_type="cluster", cov_kwds={"groups": d["upa"].astype(int)})
-    ic = mod.conf_int()
-    tabela = {t: {"OR": float(np.exp(mod.params[t])), "ic95": [float(np.exp(ic.loc[t, 0])), float(np.exp(ic.loc[t, 1]))],
-                  "p": float(mod.pvalues[t])} for t in mod.params.index if t != "Intercept"}
-    return {"formula": formula, "n": int(mod.nobs), "coeficientes": tabela}
-
-
-def ols_ponderado(df: pd.DataFrame, formula: str) -> dict:
-    vars_ = [v for v in df.columns if v in formula]
-    d = df[vars_ + ["peso", "upa"]].dropna().copy()
-    mod = smf.wls(formula, data=d, weights=d["peso"] / d["peso"].mean()).fit(
-        cov_type="cluster", cov_kwds={"groups": d["upa"].astype(int)})
-    ic = mod.conf_int()
-    return {"formula": formula, "n": int(mod.nobs), "r2": float(mod.rsquared),
-            "coeficientes": {t: {"b": float(mod.params[t]), "ic95": [float(ic.loc[t, 0]), float(ic.loc[t, 1])],
-                                 "p": float(mod.pvalues[t])} for t in mod.params.index if t != "Intercept"}}
+def tela_coefs(aj) -> dict:
+    return {c: aj.coef(f"tela_cat[T.{c}]") for c in ORDEM_TELA if c != "<1h"}
 
 
 # ===========================================================================
@@ -194,13 +147,12 @@ def grafico_scatter(df: pd.DataFrame, cor: dict) -> None:
     rng = np.random.default_rng(42)
     amostra = df.sample(min(len(df), 12_000), random_state=42)
     paineis = [("phq9_escore", "Escore PHQ-9 (0–27)", cor["tela_x_phq9"]),
-               ("phq_concentracao", "Dificuldade de concentração (0 = nenhum dia … 3 = quase todos)",
-                cor["tela_x_concentracao"])]
+               ("phq_concentracao", "Dificuldade de concentração (0 = nenhum dia … 3 = quase todos)", cor["tela_x_concentracao"])]
     for ax, (y, rot, c) in zip(axes, paineis):
         xj = amostra["tela_lazer_ord"] + rng.uniform(-0.28, 0.28, len(amostra))
         yj = amostra[y] + rng.uniform(-0.25, 0.25, len(amostra))
         ax.scatter(xj, yj, s=4, color=NEUTRO, alpha=0.18, linewidths=0, rasterized=True, label="Respondentes (amostra, com jitter)")
-        medias = [media_amostral(df[df["tela_lazer_ord"] == k], y) for k in range(6)]
+        medias = [media_amostral(df, y, dominio=df["tela_lazer_ord"] == k) for k in range(6)]
         mu = np.array([m[0] for m in medias]); se = np.array([m[1] for m in medias])
         ax.errorbar(range(6), mu, yerr=1.96 * se, color=AZUL, lw=2, marker="o", ms=8, capsize=4,
                     markeredgecolor=SURFACE, markeredgewidth=2, label="Média ponderada (IC 95%)", zorder=5)
@@ -214,7 +166,7 @@ def grafico_scatter(df: pd.DataFrame, cor: dict) -> None:
         ax.set_title(f"Spearman ρ = {c['rho']:.3f}  [IC95% {c['ic95'][0]:.3f}; {c['ic95'][1]:.3f}]   n = {c['n']:,}".replace(",", "."),
                      fontsize=10, loc="left", color=INK2, fontweight="normal")
     axes[0].legend(loc="upper left", fontsize=8.5)
-    fig.suptitle("Tempo de tela de lazer × sintomas de saúde mental — PNS 2019 (IBGE)", x=0.01, ha="left",
+    fig.suptitle("Correlação descritiva: tempo de tela de lazer × sintomas — PNS 2019 (IBGE)", x=0.01, ha="left",
                  fontsize=13, fontweight="bold")
     fig.tight_layout()
     fig.savefig(GRAF / "01_scatter_correlacao.png", dpi=160)
@@ -236,8 +188,7 @@ def grafico_heatmap(df: pd.DataFrame) -> pd.DataFrame:
                 cbar_kws={"label": "ρ de Spearman", "shrink": 0.7}, ax=ax)
     ax.grid(False)
     ax.tick_params(colors=INK2)
-    ax.set_title("Matriz de correlações de Spearman — PNS 2019 (n = {:,})".format(len(df)).replace(",", "."),
-                 loc="left", fontsize=13)
+    ax.set_title("Matriz de correlações de Spearman — PNS 2019 (n = {:,})".format(len(df)).replace(",", "."), loc="left", fontsize=13)
     fig.tight_layout()
     fig.savefig(GRAF / "02_heatmap_correlacoes.png", dpi=160)
     plt.close(fig)
@@ -245,7 +196,7 @@ def grafico_heatmap(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def grafico_barras_sexo(prev_dep: pd.DataFrame, prev_conc: pd.DataFrame) -> None:
-    fig, axes = plt.subplots(1, 2, figsize=(13, 5.2), sharey=False)
+    fig, axes = plt.subplots(1, 2, figsize=(13, 5.2))
     largura = 0.38
     for ax, tab, tit in [(axes[0], prev_dep, "Rastreio positivo para depressão (PHQ-9 ≥ 10)"),
                          (axes[1], prev_conc, "Dificuldade de concentração em mais da metade dos dias")]:
@@ -280,7 +231,6 @@ def grafico_barras_idade(prev_uso: pd.DataFrame, prev_dep_idade: pd.DataFrame) -
     ax.set_ylim(0, t["ic_sup"].max() * 1.15)
     ax.set_xticks(range(len(t))); ax.set_xticklabels(FAIXAS); ax.set_xlabel("Faixa etária")
     ax.set_ylabel("% com 3h+ por dia de tela de lazer"); ax.set_title("Uso intenso de tela de lazer (3h+/dia)", loc="left")
-
     ax = axes[1]
     largura = 0.38
     for i, (grupo, cor) in enumerate([(0, NEUTRO), (1, AZUL)]):
@@ -301,80 +251,143 @@ def grafico_barras_idade(prev_uso: pd.DataFrame, prev_dep_idade: pd.DataFrame) -
 
 
 def grafico_dose_resposta(modelos: dict) -> None:
-    """OR ajustado por faixa de tela (ref. <1h) — evidencia a curva em J que a correlação linear não capta."""
-    ordem = ["Não usa", "<1h", "1–2h", "2–3h", "3–6h", "6h+"]
-    series = [("PHQ-9>=10 ~ faixas de tela (ref. <1h)", "Rastreio de depressão (PHQ-9 ≥ 10)", AZUL, "o"),
-              ("Concentração frequente ~ faixas de tela (ref. <1h)", "Dificuldade de concentração frequente", "#eb6834", "s")]
-    fig, ax = plt.subplots(figsize=(11, 5.4))
+    fig, ax = plt.subplots(figsize=(11.5, 5.6))
     ax.axhline(1, color=AXIS, lw=1.2, zorder=1)
-    for i, (chave, rotulo, cor, marc) in enumerate(series):
-        coefs = modelos[chave]["coeficientes"]
-        ors, lo, hi = [], [], []
-        for cat in ordem:
-            if cat == "<1h":
-                ors.append(1.0); lo.append(1.0); hi.append(1.0)
-            else:
-                c = coefs[f"tela_cat[T.{cat}]"]
-                ors.append(c["OR"]); lo.append(c["ic95"][0]); hi.append(c["ic95"][1])
-        x = np.arange(6) + (i - 0.5) * 0.18
-        ors, lo, hi = map(np.array, (ors, lo, hi))
-        ax.errorbar(x, ors, yerr=[ors - lo, hi - ors], fmt=marc, color=cor, ms=9, lw=2, capsize=4,
-                    markeredgecolor=SURFACE, markeredgewidth=2, label=rotulo, zorder=3)
-        ax.plot(x[1:], ors[1:], color=cor, lw=1.2, alpha=0.6, zorder=2)
-        ax.annotate(f"OR {ors[-1]:.2f}", (x[-1], hi[-1]), xytext=(0, 6), textcoords="offset points",
-                    ha="center", fontsize=9, color=INK2)
-    ax.set_xticks(range(6)); ax.set_xticklabels(ordem)
+    marcadores = ["o", "s", "D"]
+    for i, (y, rotulo) in enumerate(DESFECHOS.items()):
+        coefs = modelos[y]["RP_por_faixa"]
+        rp = np.array([1.0 if c == "<1h" else coefs[c]["RP"] for c in ORDEM_TELA])
+        lo = np.array([1.0 if c == "<1h" else coefs[c]["ic95"][0] for c in ORDEM_TELA])
+        hi = np.array([1.0 if c == "<1h" else coefs[c]["ic95"][1] for c in ORDEM_TELA])
+        x = np.arange(6) + (i - 1) * 0.2
+        ax.errorbar(x, rp, yerr=[rp - lo, hi - rp], fmt=marcadores[i], color=SERIES[i], ms=8, lw=2, capsize=3.5,
+                    markeredgecolor=SURFACE, markeredgewidth=1.5, label=rotulo, zorder=3)
+        ax.plot(x[1:], rp[1:], color=SERIES[i], lw=1.1, alpha=0.55, zorder=2)
+    ax.set_xticks(range(6)); ax.set_xticklabels(ORDEM_TELA)
     ax.set_xlabel("Tempo livre/dia em celular, tablet ou computador para lazer (PNS P04502)")
-    ax.set_ylabel("Odds ratio ajustado (IC 95%) — ref. < 1h/dia")
-    ax.set_title("Ajustado por sexo, idade, escolaridade, renda, TV e zona rural; pesos amostrais da PNS",
-                 loc="left", fontsize=10, color=INK2, fontweight="normal")
-    ax.legend(loc="upper left")
-    fig.suptitle("Dose-resposta: o risco sobe a partir de 3h/dia e é máximo em 6h+ — PNS 2019 (IBGE)",
+    ax.set_ylabel("Razão de prevalência ajustada (IC 95%) — ref. < 1h/dia")
+    ax.set_title("Poisson com variância pelo desenho amostral (estrato + UPA + peso); ajuste por sexo, idade, escolaridade, "
+                 "renda, TV e zona rural", loc="left", fontsize=9.5, color=INK2, fontweight="normal")
+    ax.legend(loc="upper left", fontsize=9)
+    fig.suptitle("Dose-resposta: prevalências estáveis até 3h/dia e mais altas acima disso — PNS 2019",
                  x=0.01, ha="left", fontsize=13, fontweight="bold")
     fig.tight_layout()
-    fig.savefig(GRAF / "05_dose_resposta_OR.png", dpi=160)
+    fig.savefig(GRAF / "05_dose_resposta_RP.png", dpi=160)
+    plt.close(fig)
+
+
+def grafico_spec_curve(specs: pd.DataFrame, dims: dict) -> None:
+    s = specs.sort_values("RP").reset_index(drop=True)
+    linhas = [(dim, op) for dim, ops in dims.items() for op in ops]
+    fig, (a1, a2) = plt.subplots(2, 1, figsize=(13, 9.5), sharex=True, gridspec_kw={"height_ratios": [1.1, 1.5]})
+    sig = s["ic_inf"] > 1
+    x = np.arange(len(s))
+    for mask, cor, rot in [(sig, AZUL, "IC 95% acima de 1"), (~sig, NEUTRO, "IC 95% inclui 1")]:
+        a1.errorbar(x[mask], s.loc[mask, "RP"], yerr=[s.loc[mask, "RP"] - s.loc[mask, "ic_inf"], s.loc[mask, "ic_sup"] - s.loc[mask, "RP"]],
+                    fmt="o", ms=3.5, color=cor, elinewidth=0.8, label=rot)
+    a1.axhline(1, color=INK2, lw=1)
+    a1.axhline(s["RP"].median(), color=AZUL, lw=1, ls="--")
+    a1.annotate(f"mediana RP = {s['RP'].median():.2f}", (len(s) * 0.02, s["RP"].median()), xytext=(0, 5),
+                textcoords="offset points", fontsize=9, color=INK2)
+    a1.set_yscale("log")
+    ticks = [0.8, 1, 1.25, 1.5, 2, 2.5]
+    a1.set_yticks([t for t in ticks if s["ic_inf"].min() * 0.9 <= t <= s["ic_sup"].max() * 1.1] + [1])
+    a1.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"{v:g}".replace(".", ",")))
+    a1.yaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
+    a1.set_ylabel("Razão de prevalência (escala log)")
+    a1.legend(loc="upper left")
+    a1.set_title(f"{len(s)} especificações analíticas defensáveis — cada ponto é um modelo", loc="left", fontsize=10,
+                 color=INK2, fontweight="normal")
+    for j, (dim, op) in enumerate(linhas):
+        ativo = s[dim] == op
+        a2.scatter(x[ativo], np.full(ativo.sum(), j), s=6, color=INK2, marker="s")
+    a2.set_yticks(range(len(linhas)))
+    a2.set_yticklabels([f"{op}" for _, op in linhas], fontsize=8.5)
+    a2.invert_yaxis()
+    a2.grid(False)
+    a2.set_xlabel("Especificações ordenadas pela RP")
+    y0 = 0
+    for dim, ops in dims.items():
+        a2.axhline(y0 - 0.5, color=GRID, lw=0.8)
+        a2.annotate(dim.upper(), (1.005, y0 + (len(ops) - 1) / 2), xycoords=("axes fraction", "data"), ha="left",
+                    va="center", fontsize=8, color=MUTED, fontweight="bold", annotation_clip=False)
+        y0 += len(ops)
+    fig.suptitle("Specification curve: a associação sobrevive às escolhas do analista?", x=0.01, ha="left",
+                 fontsize=13, fontweight="bold")
+    fig.tight_layout()
+    fig.savefig(GRAF / "06_specification_curve.png", dpi=160)
     plt.close(fig)
 
 
 # ===========================================================================
-# Relatório
+# Relatório markdown
 # ===========================================================================
 def fmt_p(p: float) -> str:
     return "< 0,001" if p < 0.001 else f"{p:.3f}".replace(".", ",")
 
 
+def fmt_rp(c: dict, chave: str = "RP", dec: int = 2) -> str:
+    return f"{c[chave]:.{dec}f} [{c['ic95'][0]:.{dec}f}; {c['ic95'][1]:.{dec}f}]"
+
+
 def escrever_markdown(res: dict) -> None:
     L = ["# Resultados estatísticos (gerado automaticamente por `analise_exploratoria.py`)", "",
-         f"Base: PNS 2019 — {res['n_total']:,} adultos (15+) com tempo de tela e PHQ-9 completos.".replace(",", "."), "",
-         "## 1. Correlações bivariadas (Spearman)", "",
-         "| Tecnologia | Desfecho | ρ | IC 95% | p | n | Força |", "|---|---|---:|---|---:|---:|---|"]
+         f"Base: PNS 2019 — {res['n_total']:,} pessoas de 15+ anos com tempo de tela e PHQ-9 completos. "
+         "Toda inferência usa o desenho amostral (estrato + UPA + peso V00291).".replace(",", "."), ""]
+    v = res["validacao_externa"]
+    L += ["## 0. Validação externa", "", "| Indicador | Este pipeline | Literatura |", "|---|---|---|",
+          f"| PHQ-9 ≥ 10 | {v['phq9_10']['pct']:.2f}% [{v['phq9_10']['ic'][0]:.2f}; {v['phq9_10']['ic'][1]:.2f}] | 10,8% [10,4; 11,0] |",
+          f"| PHQ-9 algoritmo | {v['phq9_alg']['pct']:.2f}% [{v['phq9_alg']['ic'][0]:.2f}; {v['phq9_alg']['ic'][1]:.2f}] | 5,7% [5,4; 6,0] |", ""]
+    L += ["## 1. Hipótese primária — RP ajustada de PHQ-9 ≥ 10 por faixa de tela (ref. < 1h)", "",
+          "| Faixa | Bruta | Ajustada (principal) | Ajustada (estendida) |", "|---|---|---|---|"]
+    p = res["primario"]
+    for c in ORDEM_TELA:
+        if c == "<1h":
+            continue
+        L.append(f"| {c} | {fmt_rp(p['bruto'][c])} | {fmt_rp(p['ajustado'][c])} | {fmt_rp(p['estendido'][c])} |")
+    t = p["tendencia_usuarios"]
+    L += ["", f"**H1 — tendência entre usuários (RP por faixa):** {fmt_rp(t)}, p {fmt_p(t['p'])} (n = {p['n_usuarios']:,}).".replace(",", "."),
+          f"Não linearidade (Wald, 3 gl): χ² = {p['nao_linearidade']['chi2']:.1f}, p {fmt_p(p['nao_linearidade']['p'])}.",
+          f"Exploratório — faixas abaixo de 3h (1–2h e 2–3h = 1): p {fmt_p(p['wald_abaixo_3h']['p'])}; "
+          f"faixas acima de 3h (3–6h e 6h+ = 1): p {fmt_p(p['wald_acima_3h']['p'])}.", ""]
+    L += ["## 2. Desfechos secundários e interações (q = FDR de Benjamini-Hochberg)", "",
+          "| Teste | Estimativa | p | q (FDR) |", "|---|---|---:|---:|"]
+    for t in res["testes_secundarios"]:
+        L.append(f"| {t['teste']} | {t['estimativa']} | {fmt_p(t['p'])} | {fmt_p(t['q'])} |")
+    L += ["", "## 3. Interações (domínio: usuários; exposição 3h+ vs <3h)", ""]
+    for nome, it in res["interacoes"].items():
+        L += [f"**{nome}**", "",
+              f"- RP no grupo de referência: {fmt_rp(it['RP_ref'])}; no grupo comparado: {fmt_rp(it['RP_comp'])}",
+              f"- Interação multiplicativa (razão de RPs): {fmt_rp(it['multiplicativa'])}, p {fmt_p(it['multiplicativa']['p'])}",
+              f"- Excesso absoluto da exposição (p.p.): referência {it['DP_ref']['dif_pp']:.2f} [{it['DP_ref']['ic95'][0]:.2f}; {it['DP_ref']['ic95'][1]:.2f}]; "
+              f"comparado {it['DP_comp']['dif_pp']:.2f} [{it['DP_comp']['ic95'][0]:.2f}; {it['DP_comp']['ic95'][1]:.2f}]",
+              f"- Interação aditiva (diferença das diferenças, p.p.): {it['aditiva_pp']['dif_pp']:.2f} "
+              f"[{it['aditiva_pp']['ic95'][0]:.2f}; {it['aditiva_pp']['ic95'][1]:.2f}], p {fmt_p(it['aditiva_pp']['p'])}",
+              f"- RERI: {it['RERI']['RERI']:.2f} [{it['RERI']['ic95'][0]:.2f}; {it['RERI']['ic95'][1]:.2f}], p {fmt_p(it['RERI']['p'])}", ""]
+    L += ["## 4. Robustez", "", "| Medida | Valor |", "|---|---|"]
+    for k, e in res["e_values"].items():
+        L.append(f"| E-value {k} | {e['estimativa']:.2f} (limite do IC: {e['limite_ic']:.2f}) |")
+    for k, f in res["fap_hipotetica"].items():
+        L.append(f"| FAP hipotética {k} | {100 * f:.1f}% |")
+    sc = res["specification_curve"]["resumo"]
+    L += [f"| Specification curve | {sc['n']} modelos; mediana RP {sc['mediana_RP']:.2f}; "
+          f"{sc['pct_RP_acima_1']:.0f}% com RP > 1; {sc['pct_IC_acima_1']:.0f}% com IC acima de 1 |", ""]
+    L += ["| Desfecho (spec curve) | n | Mediana RP | % IC > 1 |", "|---|---:|---:|---:|"]
+    for k, d in res["specification_curve"]["por_desfecho"].items():
+        L.append(f"| {k} | {d['n']} | {d['mediana_RP']:.2f} | {d['pct_IC_acima_1']:.0f}% |")
+    L += ["", "| Exposição (spec curve) | n | Mediana RP | % IC > 1 |", "|---|---:|---:|---:|"]
+    for k, d in res["specification_curve"]["por_exposicao"].items():
+        L.append(f"| {k} | {d['n']} | {d['mediana_RP']:.2f} | {d['pct_IC_acima_1']:.0f}% |")
+    L += ["", "## 5. Correlações (descritivas)", "", "| Par | ρ | IC 95% | p | Força |", "|---|---:|---|---:|---|"]
     for k, c in res["correlacoes_spearman"].items():
-        x, y = k.split("_x_")
-        L.append(f"| {x} | {y} | {c['rho']:.3f} | [{c['ic95'][0]:.3f}; {c['ic95'][1]:.3f}] | {fmt_p(c['p'])} | {c['n']:,} | {c['efeito']} |")
-    p = res["pearson_horas_x_phq9"]
-    L += ["", f"Pearson (horas aproximadas × escore PHQ-9): r = {p['r']:.3f} [IC95% {p['ic95'][0]:.3f}; {p['ic95'][1]:.3f}], p {fmt_p(p['p'])}.",
-          "", "## 2. Correlação parcial (controle: idade, sexo, escolaridade, renda)", "",
-          "| Par | ρ parcial | IC 95% | p | Força |", "|---|---:|---|---:|---|"]
+        L.append(f"| {k} | {c['rho']:.3f} | [{c['ic95'][0]:.3f}; {c['ic95'][1]:.3f}] | {fmt_p(c['p'])} | {c['efeito']} |")
     for k, c in res["correlacoes_parciais"].items():
-        L.append(f"| {k} | {c['rho_parcial']:.3f} | [{c['ic95'][0]:.3f}; {c['ic95'][1]:.3f}] | {fmt_p(c['p'])} | {c['efeito']} |")
-    L += ["", "## 3. Correlação por subgrupo (tela × PHQ-9)", "", "| Grupo | ρ | IC 95% | n |", "|---|---:|---|---:|"]
-    for k, c in res["spearman_por_grupo"].items():
+        L.append(f"| {k} (parcial) | {c['rho_parcial']:.3f} | [{c['ic95'][0]:.3f}; {c['ic95'][1]:.3f}] | {fmt_p(c['p'])} | {c['efeito']} |")
+    L += ["", "| Usuários, por idade (tela × PHQ-9) | ρ | IC 95% | n |", "|---|---:|---|---:|"]
+    for k, c in res["spearman_usuarios_por_idade"].items():
         L.append(f"| {k} | {c['rho']:.3f} | [{c['ic95'][0]:.3f}; {c['ic95'][1]:.3f}] | {c['n']:,} |")
-    cmp_ = res["comparacao_sexos"]
-    L += ["", f"Diferença Homem vs Mulher: z = {cmp_['z']:.2f}, p {fmt_p(cmp_['p'])}.", "",
-          "## 4. Regressão logística ponderada (OR ajustado; EP robusto por UPA)", ""]
-    for nome, mod in res["regressoes_logisticas"].items():
-        L += [f"**{nome}** — `{mod['formula']}` (n = {mod['n']:,})", "", "| Termo | OR | IC 95% | p |", "|---|---:|---|---:|"]
-        for t, c in mod["coeficientes"].items():
-            L.append(f"| {t} | {c['OR']:.2f} | [{c['ic95'][0]:.2f}; {c['ic95'][1]:.2f}] | {fmt_p(c['p'])} |")
-        L.append("")
-    L += ["## 4b. Sensibilidade — apenas usuários de tela (exclui 'não usa')", "",
-          "| Recorte | ρ | IC 95% | p | n |", "|---|---:|---|---:|---:|"]
-    for k, c in res["sensibilidade_apenas_usuarios"].items():
-        rho = c.get("rho", c.get("rho_parcial"))
-        L.append(f"| {k} | {rho:.3f} | [{c['ic95'][0]:.3f}; {c['ic95'][1]:.3f}] | {fmt_p(c['p'])} | {c['n']:,} |")
-    L += ["", "## 4c. Perfil por faixa de tela", "", pd.DataFrame(res["perfil_por_faixa_de_tela"]).to_markdown(index=False), ""]
-    L += ["## 5. Prevalências ponderadas", ""]
+    L += ["", "## 6. Perfil por faixa de tela", "", pd.DataFrame(res["perfil_por_faixa_de_tela"]).to_markdown(index=False), "",
+          "## 7. Prevalências ponderadas", ""]
     for nome, tab in res["prevalencias"].items():
         L += [f"**{nome}**", "", pd.DataFrame(tab).round(2).to_markdown(index=False), ""]
     (OUT / "resultados_estatisticos.md").write_text("\n".join(L))
@@ -385,118 +398,192 @@ def main() -> None:
     GRAF.mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(DADOS)
     print(f"[INFO] {len(df):,} registros carregados de {DADOS.name}")
+    df["tela_cat"] = pd.Categorical(df["tela_lazer_ord"].map(TELA_ROTULO), categories=["<1h"] + [c for c in ORDEM_TELA if c != "<1h"])
+    df["usuario"] = df["tela_lazer_ord"] >= 1
+    df["tela_3h"] = (df["tela_lazer_ord"] >= 4).astype(int)
+    df["jovem"] = df["faixa_etaria"].isin(["15–17", "18–24"]).astype(int)
+    for k in (3, 4, 5):
+        df[f"d{k}"] = (df["tela_lazer_ord"] == k).astype(int)
+    usuarios = df["usuario"]
     res: dict = {"n_total": int(len(df))}
 
-    # --- 1. Correlações bivariadas ---------------------------------------
-    desfechos = {"phq9": "phq9_escore", "concentracao": "phq_concentracao", "sono": "phq_sono",
-                 "agitacao": "phq_agitacao", "humor_deprimido": "phq_humor_deprimido",
-                 "diag_depressao": "diag_depressao", "diag_ansiedade_outros": "diag_outro_transtorno_mental"}
-    cor = {}
-    for tec, col_tec in [("tela", "tela_lazer_ord"), ("tv", "tv_ord")]:
-        for nome, col in desfechos.items():
-            c = spearman_ic(df[col_tec], df[col])
-            c["rho_ponderado"] = spearman_ponderado(df, col_tec, col)
-            cor[f"{tec}_x_{nome}"] = c
+    # --- 0. Validação externa ----------------------------------------------
+    v = {}
+    for nome, y in [("phq9_10", "phq9_depressao"), ("phq9_alg", "phq9_algoritmo")]:
+        est, se, _ = media_amostral(df, y)
+        v[nome] = {"pct": 100 * est, "ic": [100 * (est - 1.96 * se), 100 * (est + 1.96 * se)]}
+    res["validacao_externa"] = v
+
+    # --- 1. Hipótese primária -----------------------------------------------
+    print("[INFO] Modelos principais (RP, desenho completo)…")
+    m_bruto = svyglm(df, "phq9_depressao ~ tela_cat")
+    m_aj = svyglm(df, f"phq9_depressao ~ tela_cat + {CTRL}")
+    m_ext = svyglm(df, f"phq9_depressao ~ tela_cat + {CTRL_EXT}")
+    m_lin = svyglm(df, f"phq9_depressao ~ tela_lazer_ord + {CTRL}", dominio=usuarios)
+    m_nl = svyglm(df, f"phq9_depressao ~ tela_lazer_ord + d3 + d4 + d5 + {CTRL}", dominio=usuarios)
+    res["primario"] = {
+        "bruto": tela_coefs(m_bruto), "ajustado": tela_coefs(m_aj), "estendido": tela_coefs(m_ext),
+        "ajustado_completo": m_aj.tabela(), "n": m_aj.n, "n_upas": m_aj.n_upas, "estratos_uma_upa": m_aj.estratos_uma_upa,
+        "tendencia_usuarios": m_lin.coef("tela_lazer_ord"), "n_usuarios": m_lin.n,
+        "nao_linearidade": wald(m_nl, ["d3", "d4", "d5"]),
+        "wald_abaixo_3h": wald(m_aj, ["tela_cat[T.1–2h]", "tela_cat[T.2–3h]"]),
+        "wald_acima_3h": wald(m_aj, ["tela_cat[T.3–6h]", "tela_cat[T.6h+]"]),
+    }
+    modelos_rp = {"phq9_depressao": {"RP_por_faixa": res["primario"]["ajustado"]}}
+
+    # --- 2. Secundários -------------------------------------------------------
+    testes = []
+    secundarios = {}
+    for y in ["concentracao_frequente", "diag_outro_transtorno_mental"]:
+        aj = svyglm(df, f"{y} ~ tela_cat + {CTRL}")
+        lin = svyglm(df, f"{y} ~ tela_lazer_ord + {CTRL}", dominio=usuarios)
+        nl = svyglm(df, f"{y} ~ tela_lazer_ord + d3 + d4 + d5 + {CTRL}", dominio=usuarios)
+        secundarios[y] = {"RP_por_faixa": tela_coefs(aj), "tendencia_usuarios": lin.coef("tela_lazer_ord"),
+                          "nao_linearidade": wald(nl, ["d3", "d4", "d5"]), "n": aj.n}
+        modelos_rp[y] = {"RP_por_faixa": secundarios[y]["RP_por_faixa"]}
+        rot = DESFECHOS[y]
+        for faixa in ["3–6h", "6h+"]:
+            c = secundarios[y]["RP_por_faixa"][faixa]
+            testes.append({"teste": f"{rot}: RP {faixa} vs <1h", "estimativa": fmt_rp(c), "p": c["p"]})
+        c = secundarios[y]["tendencia_usuarios"]
+        testes.append({"teste": f"{rot}: tendência entre usuários", "estimativa": fmt_rp(c), "p": c["p"]})
+        testes.append({"teste": f"{rot}: não linearidade", "estimativa": f"χ² = {secundarios[y]['nao_linearidade']['chi2']:.1f}",
+                       "p": secundarios[y]["nao_linearidade"]["p"]})
+    res["secundarios"] = secundarios
+
+    # --- 3. Interações (ODS 5 e idade) ----------------------------------------
+    print("[INFO] Interações…")
+    interacoes = {}
+    for nome, mod, ctrl in [("Sexo (ref. homens; comparado: mulheres)", "sexo_feminino", CTRL_SEM_SEXO),
+                            ("Idade (ref. 25+; comparado: 15–24 anos)", "jovem", CTRL_SEM_IDADE)]:
+        f = f"phq9_depressao ~ tela_3h * {mod} + {ctrl}"
+        mp = svyglm(df, f, dominio=usuarios)
+        ma = svyglm(df, f, familia="gauss-identidade", dominio=usuarios)
+        it = f"tela_3h:{mod}"
+        interacoes[nome] = {
+            "RP_ref": mp.coef("tela_3h"), "RP_comp": combinacao(mp, {"tela_3h": 1, it: 1}),
+            "multiplicativa": mp.coef(it), "RERI": reri(mp, "tela_3h", mod, it),
+            "DP_ref": ma.coef("tela_3h"), "DP_comp": combinacao(ma, {"tela_3h": 1, it: 1}),
+            "aditiva_pp": ma.coef(it), "n": mp.n}
+        testes.append({"teste": f"Interação multiplicativa — {nome}", "estimativa": fmt_rp(mp.coef(it)), "p": mp.coef(it)["p"]})
+        c = ma.coef(it)
+        testes.append({"teste": f"Interação aditiva (p.p.) — {nome}",
+                       "estimativa": f"{c['dif_pp']:.2f} [{c['ic95'][0]:.2f}; {c['ic95'][1]:.2f}]", "p": c["p"]})
+    res["interacoes"] = interacoes
+
+    q = multipletests([t["p"] for t in testes], method="fdr_bh")[1]
+    for t, qq in zip(testes, q):
+        t["q"] = float(qq)
+    res["testes_secundarios"] = testes
+
+    # --- 4. Robustez: E-value e FAP --------------------------------------------
+    aj = res["primario"]["ajustado"]
+    res["e_values"] = {f"PHQ-9 ≥ 10, {k} vs <1h": e_value(aj[k]["RP"], aj[k]["ic95"][0]) for k in ["3–6h", "6h+"]}
+    for y in ["concentracao_frequente", "diag_outro_transtorno_mental"]:
+        c = secundarios[y]["RP_por_faixa"]["6h+"]
+        res["e_values"][f"{DESFECHOS[y]}, 6h+ vs <1h"] = e_value(c["RP"], c["ic95"][0])
+    casos = df["phq9_depressao"] == 1
+    w_casos = df.loc[casos, "peso"].sum()
+    pc = {k: df.loc[casos & (df["tela_cat"] == k), "peso"].sum() / w_casos for k in ["3–6h", "6h+"]}
+    res["fap_hipotetica"] = {"PHQ-9 ≥ 10 atribuível a 3h+ (supõe causalidade)": fap(pc, {k: aj[k]["RP"] for k in pc})}
+    res["proporcao_casos_por_faixa"] = pc
+
+    # --- 5. Specification curve -------------------------------------------------
+    print("[INFO] Specification curve (144 modelos)…")
+    dims = {
+        "desfecho": {"PHQ-9 ≥ 10": "phq9_depressao", "PHQ-9 algoritmo": "phq9_algoritmo",
+                     "Escore PHQ-9": "phq9_escore", "Concentração": "concentracao_frequente"},
+        "exposição": {"6h+ vs <1h": ("tela_lazer_ord", "x6"), "3h+ vs 1–3h (usuários)": ("usuario", "tela_3h"),
+                      "3h+ vs <3h (todos)": (None, "tela_3h")},
+        "covariáveis": {"mínimo": CTRL_MIN, "principal": CTRL, "estendido": CTRL_EXT},
+        "amostra": {"15+": 15, "18+": 18},
+        "pesos": {"com peso": True, "sem peso": False},
+    }
+    df["x6"] = (df["tela_lazer_ord"] == 5).astype(int)
+    specs = []
+    for (dn, y), (en, (dom_col, x)), (cn, ctrl), (an, idade_min), (pn, pond) in product(*[d.items() for d in dims.values()]):
+        dom = df["idade"] >= idade_min
+        if dom_col == "tela_lazer_ord":
+            dom &= df["tela_lazer_ord"].isin([1, 5])
+        elif dom_col == "usuario":
+            dom &= df["usuario"]
+        a = svyglm(df, f"{y} ~ {x} + {ctrl}", dominio=dom, ponderar=pond)
+        c = a.coef(x)
+        specs.append({"desfecho": dn, "exposição": en, "covariáveis": cn, "amostra": an, "pesos": pn,
+                      "RP": c["RP"], "ic_inf": c["ic95"][0], "ic_sup": c["ic95"][1], "p": c["p"], "n": a.n})
+    specs = pd.DataFrame(specs)
+
+    def resumo(d: pd.DataFrame) -> dict:
+        return {"n": int(len(d)), "mediana_RP": float(d["RP"].median()), "min_RP": float(d["RP"].min()),
+                "max_RP": float(d["RP"].max()), "pct_RP_acima_1": float(100 * (d["RP"] > 1).mean()),
+                "pct_IC_acima_1": float(100 * (d["ic_inf"] > 1).mean())}
+    res["specification_curve"] = {
+        "resumo": resumo(specs),
+        "por_desfecho": {k: resumo(g) for k, g in specs.groupby("desfecho")},
+        "por_exposicao": {k: resumo(g) for k, g in specs.groupby("exposição")},
+        "especificacoes": specs.to_dict("records")}
+    grafico_spec_curve(specs, {k: list(v_) for k, v_ in dims.items()})
+
+    # --- 6. Descritivos: correlações, perfil, prevalências ----------------------
+    desc = {"phq9": "phq9_escore", "concentracao": "phq_concentracao", "sono": "phq_sono", "agitacao": "phq_agitacao",
+            "humor_deprimido": "phq_humor_deprimido", "diag_ansiedade_outros": "diag_outro_transtorno_mental"}
+    cor = {f"tela_x_{n}": spearman_ic(df["tela_lazer_ord"], df[c]) for n, c in desc.items()}
     res["correlacoes_spearman"] = cor
-    res["pearson_horas_x_phq9"] = pearson_ic(df["tela_lazer_horas"], df["phq9_escore"])
-    res["pearson_horas_x_concentracao"] = pearson_ic(df["tela_lazer_horas"], df["phq_concentracao"])
-
     controles = ["idade", "sexo_feminino", "escolaridade", "renda_faixa"]
-    res["correlacoes_parciais"] = {
-        f"tela_x_{n}": spearman_parcial(df, "tela_lazer_ord", desfechos[n], controles)
-        for n in ["phq9", "concentracao", "sono", "agitacao"]}
+    res["correlacoes_parciais"] = {f"tela_x_{n}": spearman_parcial(df, "tela_lazer_ord", desc[n], controles)
+                                   for n in ["phq9", "concentracao"]}
+    u = df[usuarios]
+    res["spearman_usuarios_por_idade"] = {f: spearman_ic(u.loc[u.faixa_etaria == f, "tela_lazer_ord"],
+                                                         u.loc[u.faixa_etaria == f, "phq9_escore"]) for f in FAIXAS}
+    perfil = []
+    for k in range(6):
+        dom = df["tela_lazer_ord"] == k
+        g = df[dom]
+        perfil.append({"tela": TELA_ROTULO[k], "n": int(dom.sum()),
+                       "idade_media": round(media_amostral(df, "idade", dom)[0], 1),
+                       "pct_60_mais": round(100 * media_amostral(df.assign(v=(df["idade"] >= 60).astype(int)), "v", dom)[0], 1),
+                       "pct_ate_1SM": round(100 * media_amostral(df.assign(v=(df["renda_faixa"] <= 3).astype(float).where(df["renda_faixa"].notna())), "v", dom)[0], 1),
+                       "pct_mulheres": round(100 * media_amostral(df, "sexo_feminino", dom)[0], 1)})
+        del g
+    res["perfil_por_faixa_de_tela"] = perfil
 
-    # --- 2. Subgrupos (ODS 5 / idade) ---------------------------------------
-    grp = {}
-    for sexo in ["Homem", "Mulher"]:
-        grp[f"sexo={sexo}"] = spearman_ic(df.loc[df.sexo == sexo, "tela_lazer_ord"], df.loc[df.sexo == sexo, "phq9_escore"])
-    for f in FAIXAS:
-        s = df[df.faixa_etaria == f]
-        grp[f"idade={f}"] = spearman_ic(s["tela_lazer_ord"], s["phq9_escore"])
-    res["spearman_por_grupo"] = grp
-    res["comparacao_sexos"] = comparar_correlacoes(grp["sexo=Homem"], grp["sexo=Mulher"])
-
-    # --- 3. Prevalências ponderadas ----------------------------------------
     prev_dep = tabela_prevalencia(df, "phq9_depressao", ["sexo", "tela_lazer_ord"])
     prev_conc = tabela_prevalencia(df, "concentracao_frequente", ["sexo", "tela_lazer_ord"])
     prev_uso = tabela_prevalencia(df, "tela_lazer_3h_mais", ["faixa_etaria"])
-    prev_uso_sexo = tabela_prevalencia(df, "tela_lazer_3h_mais", ["sexo"])
     prev_dep_idade = tabela_prevalencia(df, "phq9_depressao", ["faixa_etaria", "tela_lazer_3h_mais"])
-    prev_dep_sexo = tabela_prevalencia(df, "phq9_depressao", ["sexo"])
-    prev_geral = {y: media_amostral(df, y) for y in ["phq9_depressao", "concentracao_frequente", "tela_lazer_3h_mais"]}
     res["prevalencias"] = {
+        "PHQ-9>=10 por faixa de tela": tabela_prevalencia(df, "phq9_depressao", ["tela_lazer_ord"]).to_dict("records"),
         "PHQ-9>=10 por sexo e tela": prev_dep.to_dict("records"),
         "Concentracao frequente por sexo e tela": prev_conc.to_dict("records"),
         "Uso 3h+ por faixa etaria": prev_uso.to_dict("records"),
-        "Uso 3h+ por sexo": prev_uso_sexo.to_dict("records"),
+        "Uso 3h+ por sexo": tabela_prevalencia(df, "tela_lazer_3h_mais", ["sexo"]).to_dict("records"),
         "PHQ-9>=10 por faixa etaria e uso 3h+": prev_dep_idade.to_dict("records"),
-        "PHQ-9>=10 por sexo": prev_dep_sexo.to_dict("records"),
-        "Geral": [{"indicador": k, "pct": 100 * v[0], "ic_inf": 100 * (v[0] - 1.96 * v[1]),
-                   "ic_sup": 100 * (v[0] + 1.96 * v[1]), "n": v[2]} for k, v in prev_geral.items()],
+        "PHQ-9>=10 por sexo": tabela_prevalencia(df, "phq9_depressao", ["sexo"]).to_dict("records"),
+        "Uso 6h+ por faixa etaria": tabela_prevalencia(df.assign(u6=(df["tela_lazer_ord"] == 5).astype(int)), "u6", ["faixa_etaria"]).to_dict("records"),
     }
+    res["populacao_estimada_milhoes"] = {
+        "15+": df["peso"].sum() / 1e6, "3h+": df.loc[df["tela_3h"] == 1, "peso"].sum() / 1e6,
+        "6h+": df.loc[df["tela_lazer_ord"] == 5, "peso"].sum() / 1e6,
+        "6h+ e PHQ-9>=10": df.loc[(df["tela_lazer_ord"] == 5) & casos, "peso"].sum() / 1e6}
 
-    # --- 4. Regressões ajustadas -------------------------------------------
-    df["tela_cat"] = pd.Categorical(df["tela_lazer_ord"].map(TELA_ROTULO), categories=[TELA_ROTULO[i] for i in [1, 0, 2, 3, 4, 5]])
-    ctrl = "sexo_feminino + C(faixa_etaria) + escolaridade + C(renda_faixa) + tv_ord + zona_rural"
-    res["regressoes_logisticas"] = {
-        "PHQ-9>=10 ~ faixas de tela (ref. <1h)": logit_ponderado(df, f"phq9_depressao ~ tela_cat + {ctrl}"),
-        "PHQ-9>=10 ~ tendência ordinal de tela": logit_ponderado(df, f"phq9_depressao ~ tela_lazer_ord + {ctrl}"),
-        "Concentração frequente ~ faixas de tela (ref. <1h)": logit_ponderado(df, f"concentracao_frequente ~ tela_cat + {ctrl}"),
-        "Interação ODS 5: PHQ-9>=10 ~ tela 3h+ × sexo": logit_ponderado(
-            df, "phq9_depressao ~ tela_lazer_3h_mais * sexo_feminino + C(faixa_etaria) + escolaridade + C(renda_faixa) + tv_ord + zona_rural"),
-        "Interação idade: PHQ-9>=10 ~ tela 3h+ × jovem (15-24)": logit_ponderado(
-            df.assign(jovem=df["faixa_etaria"].isin(["15–17", "18–24"]).astype(int)),
-            "phq9_depressao ~ tela_lazer_3h_mais * jovem + sexo_feminino + escolaridade + C(renda_faixa) + tv_ord + zona_rural"),
-    }
-    res["regressoes_logisticas"]["Diag. ansiedade/outros (Q11006) ~ faixas de tela (ref. <1h)"] = logit_ponderado(
-        df, f"diag_outro_transtorno_mental ~ tela_cat + {ctrl}")
-    # Jovens: poucos usam <1h (referência instável) -> tendência ordinal entre usuários, por faixa etária
-    for rot, faixas in [("15-24", ["15–17", "18–24"]), ("25-44", ["25–34", "35–44"]), ("45+", ["45–59", "60+"])]:
-        sub = df[df["faixa_etaria"].isin(faixas) & (df["tela_lazer_ord"] >= 1)]
-        res["regressoes_logisticas"][f"Usuários {rot} anos: PHQ-9>=10 ~ tendência por faixa de tela"] = logit_ponderado(
-            sub, "phq9_depressao ~ tela_lazer_ord + sexo_feminino + idade + escolaridade + C(renda_faixa) + tv_ord + zona_rural")
-    res["regressao_linear_phq9"] = ols_ponderado(df, f"phq9_escore ~ tela_lazer_ord + {ctrl}")
-
-    # --- 4b. Sensibilidade: apenas usuários (exclui "não usa", grupo de perfil distinto) ----
-    usuarios = df[df["tela_lazer_ord"] >= 1]
-    sens = {"todas_idades": spearman_ic(usuarios["tela_lazer_ord"], usuarios["phq9_escore"]),
-            "parcial_todas_idades": spearman_parcial(usuarios, "tela_lazer_ord", "phq9_escore", controles),
-            "concentracao_todas_idades": spearman_ic(usuarios["tela_lazer_ord"], usuarios["phq_concentracao"])}
-    for f in FAIXAS:
-        s = usuarios[usuarios.faixa_etaria == f]
-        sens[f"idade={f}"] = spearman_ic(s["tela_lazer_ord"], s["phq9_escore"])
-    res["sensibilidade_apenas_usuarios"] = sens
-
-    # --- 4c. Perfil de cada faixa de tela (explica o confundimento do grupo "não usa") ----
-    perfil = []
-    for k in range(6):
-        g = df[df["tela_lazer_ord"] == k]
-        perfil.append({"tela": TELA_ROTULO[k], "n": len(g),
-                       "idade_media": round(float(np.average(g["idade"], weights=g["peso"])), 1),
-                       "pct_60_mais": round(100 * media_amostral(g.assign(v=(g["idade"] >= 60).astype(int)), "v")[0], 1),
-                       "pct_ate_1SM": round(100 * media_amostral(g.assign(v=(g["renda_faixa"] <= 3).astype(float).where(g["renda_faixa"].notna())), "v")[0], 1),
-                       "pct_mulheres": round(100 * media_amostral(g, "sexo_feminino")[0], 1)})
-    res["perfil_por_faixa_de_tela"] = perfil
-
-    # --- 5. Gráficos --------------------------------------------------------
-    grafico_scatter(df, {"tela_x_phq9": cor["tela_x_phq9"], "tela_x_concentracao": cor["tela_x_concentracao"]})
+    # --- 7. Gráficos e saída ----------------------------------------------------
+    grafico_scatter(df, cor)
     res["matriz_spearman"] = grafico_heatmap(df).round(4).to_dict()
     grafico_barras_sexo(prev_dep, prev_conc)
     grafico_barras_idade(prev_uso, prev_dep_idade)
-    grafico_dose_resposta(res["regressoes_logisticas"])
-
+    grafico_dose_resposta(modelos_rp)
+    (OUT / "graficos" / "05_dose_resposta_OR.png").unlink(missing_ok=True)
     (OUT / "resultados_estatisticos.json").write_text(json.dumps(res, ensure_ascii=False, indent=2, default=float))
     escrever_markdown(res)
 
-    # --- resumo no terminal -------------------------------------------------
-    print("\n=== CORRELAÇÕES (Spearman) ===")
-    for k, c in cor.items():
-        print(f"{k:<32} ρ={c['rho']:+.3f} [{c['ic95'][0]:+.3f};{c['ic95'][1]:+.3f}] p={c['p']:.2g} ({c['efeito']})")
-    print("\n=== PARCIAIS (controle idade/sexo/escolaridade/renda) ===")
-    for k, c in res["correlacoes_parciais"].items():
-        print(f"{k:<32} ρ={c['rho_parcial']:+.3f} p={c['p']:.2g} ({c['efeito']})")
-    print(f"\nHomem vs Mulher (tela×PHQ-9): {res['comparacao_sexos']}")
-    print(f"[OK] Gráficos em {GRAF}; tabelas em {OUT}/resultados_estatisticos.(md|json)")
+    print("\n=== HIPÓTESE PRIMÁRIA (PHQ-9 ≥ 10) ===")
+    for k, c in res["primario"]["ajustado"].items():
+        print(f"  {k:<8} RP aj = {fmt_rp(c)}  p={c['p']:.2g}")
+    t = res["primario"]["tendencia_usuarios"]
+    print(f"  Tendência (usuários): RP/faixa = {fmt_rp(t, dec=3)} p={t['p']:.2g}")
+    print(f"  Não linearidade: p={res['primario']['nao_linearidade']['p']:.2g}")
+    print(f"[OK] Spec curve: {res['specification_curve']['resumo']}")
+    print(f"[OK] Saídas em {OUT}")
 
 
 if __name__ == "__main__":

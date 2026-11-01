@@ -15,6 +15,7 @@
     "conferido": true,
     "arquivo": "input_PNS_2019.txt"
   },
+  "sha256_arquivo_bruto": "a789f6b0cbf6057111939fb3d1fe62ad1d5e848ba9c1f7860d7b44daa4be6057",
   "distribuicao_codigos_brutos": {
     "P04501": {
       "1.0": 18188,
@@ -97,6 +98,12 @@
     "C006": {
       "1": 42799,
       "2": 48047
+    },
+    "C011": {
+      "1": 35144,
+      "2": 7514,
+      "3": 7628,
+      "4": 40560
     }
   },
   "ignorados_9_convertidos_em_nulo": {
@@ -113,7 +120,8 @@
     "N018": 0,
     "Q092": 0,
     "Q11006": 0,
-    "C006": 0
+    "C006": 0,
+    "C011": 0
   },
   "nulos_por_coluna": {
     "uf": 0,
@@ -129,6 +137,9 @@
     "escolaridade": 0,
     "renda_faixa": 22,
     "internet_domicilio": 0,
+    "regiao": 0,
+    "estado_civil": 0,
+    "ocupacao": 0,
     "tela_lazer_ord": 0,
     "tela_lazer_horas": 0,
     "tela_lazer_cat": 0,
@@ -146,6 +157,7 @@
     "phq_ideacao": 0,
     "phq9_escore": 0,
     "phq9_depressao": 0,
+    "phq9_algoritmo": 0,
     "phq9_gravidade": 0,
     "concentracao_frequente": 0,
     "sono_frequente": 0,

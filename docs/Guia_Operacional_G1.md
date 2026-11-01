@@ -23,7 +23,7 @@ Abaixo está o direcionamento baseado **literalmente nas instruções da aula e 
 
 **Resumo da Ópera:** Vamos focar em **UMA** pesquisa sólida, ancorada principalmente no ODS 3, utilizando uma única base de dados.
 
-> ✅ **Decisão tomada com base nos dados:** o **ODS 5 entra**. Na PNS 2019, as mulheres têm **2,5 vezes mais sintomas depressivos** que os homens (15,1% vs 6,0%), e chegam a **19,9%** entre as que passam 6h+/dia em telas de lazer. A justificativa é a **desigualdade de carga**: o efeito da tela em si é igual para os dois sexos, mas as mulheres partem de um patamar muito maior de sofrimento. O **ODS 16 não se aplica**: os dados não tratam de instituições, violência ou justiça.
+> ✅ **Decisão tomada com base nos dados:** o **ODS 5 entra**. Na PNS 2019, as mulheres têm **2,5 vezes mais sintomas depressivos** que os homens (15,1% vs 6,0%), e chegam a **19,9%** entre as que passam 6h+/dia em telas de lazer. A justificativa é a **desigualdade de carga**: na escala relativa o efeito da tela é semelhante nos dois sexos, mas as mulheres partem de um patamar muito maior de sofrimento. Na escala absoluta, há indício (sugestivo, p = 0,052) de que o uso de 3h+ soma mais casos entre elas: +4,4 pontos percentuais, contra +2,5 nos homens. O **ODS 16 não se aplica**: os dados não tratam de instituições, violência ou justiça.
 
 ---
 
@@ -98,7 +98,7 @@ O Marketing entende de público, concorrência e como contar uma história.
 Quando as trilhas se encontrarem, o Marketing e o RH pegam os gráficos dos Devs e juntam com suas pesquisas teóricas e de persona. O Dossiê final entregue ao Grupo 2 (focado em criar a solução) deverá conter:
 
 1. **A Questão de Pesquisa Fechada** (O nosso "HMW - How Might We / Como Poderíamos"). → **Proposta pelos dados:** *"Como poderíamos ajudar jovens que passam mais de 3 horas por dia em telas de lazer a reduzir esse tempo, de modo a proteger sua concentração e seu bem-estar emocional?"*
-2. **O Painel de Evidências (Gerado pelos Devs):** Gráficos provando estatisticamente a relação entre tecnologia e saúde mental. → ✅ `outputs/graficos/01` a `05` + [Dossiê](../Dossie_Evidencias_Quantitativas.md)
+2. **O Painel de Evidências (Gerado pelos Devs):** Gráficos provando estatisticamente a relação entre tecnologia e saúde mental. → ✅ `outputs/graficos/01` a `06` + [Dossiê](../Dossie_Evidencias_Quantitativas.md) (v2, com revisão metodológica)
 3. **A Árvore de Problemas e a Literatura (Gerado pelo RH):** A fundamentação teórica de por que isso afeta a saúde mental.
 4. **A Persona e o Cenário (Gerado pelo Marketing):** Quem sofre com isso e por que os apps atuais de "bem-estar digital" não estão funcionando.
 
@@ -106,29 +106,35 @@ Quando as trilhas se encontrarem, o Marketing e o RH pegam os gráficos dos Devs
 
 ### 5. Resultados do Dossiê (o que todos precisam saber) 📊
 
-**Fonte:** IBGE, Pesquisa Nacional de Saúde 2019 (microdados oficiais). n = 90.846 pessoas de 15+ anos. Validação: o pipeline reproduz a prevalência oficial de depressão (10,8%).
+**Fonte:** IBGE, Pesquisa Nacional de Saúde 2019 (microdados oficiais). n = 90.846 pessoas de 15+ anos. Validação: o pipeline reproduz as duas prevalências oficiais publicadas (10,8% pelo corte; 5,7% pelo algoritmo).
+
+> 🔄 **Revisão metodológica (Dossiê v2):** os números abaixo usam **razão de prevalência** com o desenho amostral completo, mais conservadora que o odds ratio da v1. Duas conclusões foram corrigidas: (1) o efeito por pessoa **não** é maior nos jovens, só a exposição; (2) no ODS 5, a escala absoluta sugere mais casos entre mulheres. Detalhes em [`docs/04_Rigor_Metodologico.md`](04_Rigor_Metodologico.md).
 
 #### 5.1 O achado honesto: não é uma reta, é um limiar
 
 * **A correlação linear é desprezível** (Spearman ρ = 0,02). **Não podemos dizer que "quanto mais tela, pior".**
 * O que os dados mostram é um **efeito de limiar (curva em J)**: até ~3h/dia de tela de lazer o risco é estável; **acima de 3h ele sobe**.
 
-| Tela de lazer/dia | Chance de rastreio positivo para depressão* | Chance de dificuldade de concentração frequente* | Chance de diagnóstico de ansiedade/outros* |
+| Tela de lazer/dia | Prevalência de rastreio positivo para depressão* | Prevalência de dificuldade de concentração frequente* | Prevalência de diagnóstico de ansiedade/outros* |
 |---|---|---|---|
 | 1–3h | igual a <1h | igual a <1h | igual a <1h |
-| 3–6h | **+22%** | **+32%** | **+21%** |
-| **6h ou mais** | **+72%** | **+62%** | **+42%** |
+| 3–6h | **+19%** | **+29%** | +19% (não significativo após correção de multiplicidade) |
+| **6h ou mais** | **+59%** | **+55%** | **+38%** |
 
-\* Odds ratio ajustado por sexo, idade, renda, escolaridade, TV e zona rural; comparação com quem usa menos de 1h/dia.
+\* Razão de prevalência ajustada por sexo, idade, renda, escolaridade, TV e zona rural, com o desenho amostral da PNS; comparação com quem usa menos de 1h/dia.
 
-📊 Gráfico principal: `outputs/graficos/05_dose_resposta_OR.png`
+* **Robustez:** a associação apareceu em **144 de 144** formas diferentes de analisar os dados (specification curve).
+* **Cuidado:** o ponto exato de 3h surgiu da exploração dos dados. Digam "a partir de cerca de 3h", não "exatamente 3h".
+
+📊 Gráficos principais: `outputs/graficos/05_dose_resposta_RP.png` · `06_specification_curve.png`
 
 #### 5.2 Quem é afetado
 
 | Grupo | Dado-chave |
 |---|---|
 | **Adolescentes (15–17)** | **58,8%** usam 3h+/dia de tela de lazer |
-| **Jovens (18–24)** | **52,2%** usam 3h+/dia; **27%** dos 15–24 usam **6h+** |
+| **Jovens (18–24)** | **52,2%** usam 3h+/dia; **1 em cada 3** adolescentes de 15–17 (31,9%) e 1 em cada 4 jovens de 18–24 (25,3%) usam **6h+** |
+| Efeito por idade | O efeito **por pessoa** é semelhante em todas as idades. O que muda é a **exposição**, muito maior nos jovens |
 | Idosos (60+) | Só 5,7% usam 3h+/dia |
 | **Mulheres** | 15,1% com sintomas depressivos (vs 6,0% dos homens); **19,9%** entre as que usam 6h+ |
 | Brasil | **40,8 milhões** usam 3h+/dia; **16,6 milhões** usam 6h+; **2,4 milhões** destes têm rastreio positivo para depressão |
@@ -141,7 +147,9 @@ Quando as trilhas se encontrarem, o Marketing e o RH pegam os gráficos dos Devs
 |---|---|
 | "Uso acima de 3h/dia está associado a mais sintomas depressivos e problemas de concentração" | "Telas **causam** ansiedade ou depressão" (o estudo é transversal) |
 | "O uso intenso é um fenômeno jovem" | "Mais tela é sempre pior" (até 3h não há efeito) |
-| "Mulheres carregam o dobro da carga de sofrimento" | "A tela afeta mais as mulheres" (o efeito é igual; a carga é que é maior) |
+| "Mulheres carregam o dobro da carga de sofrimento" | "A tela afeta mais as mulheres" (o efeito relativo é semelhante; há só um **indício** de mais casos absolutos) |
+| "O uso intenso se concentra nos jovens" | "A tela faz mais mal aos jovens" (o teste de interação não sustenta) |
+| "A associação resiste a 144 análises diferentes" | "O limite é exatamente 3h" (o ponto exato é exploratório) |
 | "Os dados vêm do IBGE, base oficial nacional" | "Vídeos curtos especificamente…" (a pergunta do IBGE não separa) |
 
 #### 5.4 Limitações (citar na apresentação)
@@ -151,6 +159,8 @@ Quando as trilhas se encontrarem, o Marketing e o RH pegam os gráficos dos Devs
 3. Dados de **2019**: pré-pandemia e pré-TikTok massivo. O cenário atual tende a ser pior.
 4. A PNS **não tem escala de ansiedade** (GAD-7). Usamos o diagnóstico autorreferido.
 5. "Quem não usa tela" também tem mais sintomas, mas é outro perfil (mais velho e mais pobre). **Não é argumento a favor de abstinência digital.**
+6. A PNS mede **tempo**, não **dependência**. O tema "dependência tecnológica" não pode ser medido diretamente nesta base.
+7. A **ansiedade** é o construto pior medido: diagnóstico amplo, sem escala. Ver a reavaliação da linha de pesquisa em [`docs/04`](04_Rigor_Metodologico.md) §9.
 
 #### 5.5 Recomendações para o Grupo 2
 
@@ -170,3 +180,5 @@ Quando as trilhas se encontrarem, o Marketing e o RH pegam os gráficos dos Devs
 | `outputs/graficos/*.png` | Marketing (DreamShaper, slides) | Gráficos prontos para apresentação |
 | [`docs/01_Data_Discovery.md`](01_Data_Discovery.md) | RH | Justificativa da escolha da base e das variáveis |
 | `outputs/resultados_estatisticos.md` | Quem quiser os detalhes | Todas as tabelas numéricas |
+| [`docs/04_Rigor_Metodologico.md`](04_Rigor_Metodologico.md) | **Todos** (antes do standup) | Método científico aplicado, STROBE, ética, o que foi corrigido e reavaliação da pergunta |
+| [`docs/05_Agenda_de_Pesquisa.md`](05_Agenda_de_Pesquisa.md) | RH e quem quiser aprofundar | Posicionamento na literatura, perguntas abertas e referências verificadas |
