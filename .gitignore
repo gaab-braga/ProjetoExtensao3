@@ -1,0 +1,9 @@
+# Microdados brutos do IBGE (centenas de MB) — baixar conforme docs/02_Aquisicao_Dados.md
+data/raw/*
+!data/raw/.gitkeep
+# Base processada é regenerável pelo etl_processor.py
+data/processed/*.csv
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
