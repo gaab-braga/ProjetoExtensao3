@@ -205,7 +205,7 @@ graph LR
 
 ## 9. Reavaliação da linha de pesquisa
 
-A pergunta atual é: *"Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia os níveis de **ansiedade** e o **déficit de atenção** nas atividades do dia a dia (…)?"*
+A pergunta avaliada nesta revisão era: *"Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia os níveis de **ansiedade** e o **déficit de atenção** nas atividades do dia a dia (…)?"*
 
 Cada construto da pergunta, confrontado com o que a PNS realmente mede:
 
@@ -219,7 +219,7 @@ Cada construto da pergunta, confrontado com o que a PNS realmente mede:
 
 **Diagnóstico:** a evidência mais forte está num construto que **não aparece** na pergunta (sintomas depressivos). O construto central da pergunta (**ansiedade**) é o **pior medido**. Isso não invalida o trabalho, mas cria um desalinhamento que um avaliador pode notar.
 
-**Opções para a equipe decidir** (a pergunta **não** foi alterada nesta revisão):
+**Opções apresentadas à equipe:**
 
 | Opção | Redação | Prós | Contras |
 |---|---|---|---|
@@ -227,3 +227,18 @@ Cada construto da pergunta, confrontado com o que a PNS realmente mede:
 | **B — ampliar o desfecho** | "…influencia a **saúde mental** — sintomas depressivos, ansiedade — e a **capacidade de concentração** nas atividades do dia a dia…" | Alinha a pergunta à evidência mais forte sem abandonar a ansiedade; continua dentro do subtema oficial | Pequena mudança de foco a comunicar à equipe e ao Grupo 2 |
 
 O que **não** recomendamos: tirar "ansiedade" da pergunta. O subtema e o tema da equipe giram em torno dela, e a evidência, mesmo fraca, aponta na mesma direção.
+
+### ✅ Decisão da equipe (01/11/2026): opção B
+
+A redação adotada preserva as premissas originais: **uso intenso de telas** (com redes sociais e vídeos curtos), **ansiedade** em primeiro lugar, **déficit de atenção**, **atividades do dia a dia** e a busca por **caminhos para uma relação mais saudável com a tecnologia**. A única mudança é nomear a **saúde mental** como desfecho e incluir os **sintomas depressivos**:
+
+> *"Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia a saúde mental, em especial a ansiedade e os sintomas depressivos, e o déficit de atenção nas atividades do dia a dia, e que padrões de dados podem indicar caminhos para uma relação mais saudável com a tecnologia?"*
+
+| Construto da pergunta | Evidência (Dossiê v2) |
+|---|---|
+| Saúde mental → sintomas depressivos | 🟢 Forte |
+| Saúde mental → ansiedade | 🟠 Fraca a moderada (medida ampla) |
+| Déficit de atenção (concentração) | 🟡 Moderada (item único) |
+| Padrões para uma relação mais saudável | 🟢 Limiar de ~3h/dia (exploratório) e grupos prioritários |
+
+O tema da equipe ("Ansiedade e dependência tecnológica…"), o subtema oficial e o tema norteador **permanecem inalterados**.

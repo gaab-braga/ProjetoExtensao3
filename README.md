@@ -1,7 +1,7 @@
 # Projeto de Extensão IESB — Grupo 1 · Saúde Mental e Dependência Digital
 
 **Fase:** Problem Space (Double Diamond) · **ODS 3** (Saúde e Bem-Estar) + **ODS 5** (Igualdade de Gênero), justificado pela desigualdade de carga.
-**Pergunta:** *Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia os níveis de ansiedade e o déficit de atenção na sociedade contemporânea?*
+**Pergunta:** *Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia a saúde mental, em especial a ansiedade e os sintomas depressivos, e o déficit de atenção na sociedade contemporânea?*
 
 ## Base oficial escolhida
 **IBGE — Pesquisa Nacional de Saúde 2019 (microdados).** A justificativa e as colunas exatas estão em [`docs/01_Data_Discovery.md`](docs/01_Data_Discovery.md).

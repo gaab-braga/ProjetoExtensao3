@@ -3,7 +3,7 @@
 
 **Projeto de Extensão IESB · Grupo 1 (Problem Space) → entrega para o Grupo 2 (Solution Space)**
 **Tema norteador:** Saúde Mental · **ODS 3** (Saúde e Bem-Estar) · **ODS 5** (Igualdade de Gênero), justificado na seção 4.5
-**Pergunta de pesquisa:** *Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia os níveis de ansiedade e o déficit de atenção na sociedade contemporânea?*
+**Pergunta de pesquisa:** *Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia a saúde mental, em especial a ansiedade e os sintomas depressivos, e o déficit de atenção na sociedade contemporânea?*
 **Versão 2 (01/11/2026):** revisão metodológica completa. Mudanças e justificativas em [`docs/04_Rigor_Metodologico.md`](docs/04_Rigor_Metodologico.md).
 
 ---
