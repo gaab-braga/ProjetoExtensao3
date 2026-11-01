@@ -1,7 +1,7 @@
 # Passo 1 — Data Discovery (mapeamento de metadados e dicionários)
 
 **Projeto de Extensão IESB · Grupo 1 (Problem Space) · ODS 3 (+ ODS 5 condicional)**
-**Pergunta:** *Como o uso excessivo de tecnologias digitais influencia os níveis de ansiedade e o déficit de atenção na sociedade contemporânea?*
+**Pergunta:** *Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia os níveis de ansiedade e o déficit de atenção na sociedade contemporânea?*
 
 ---
 

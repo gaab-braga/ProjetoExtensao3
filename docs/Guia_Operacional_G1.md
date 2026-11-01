@@ -37,9 +37,11 @@ A equipe já definiu o nosso direcionamento exato, cumprindo as regras do edital
 * **Área do Conhecimento:** Ciências Exatas e da Terra / Tecnológicas
 * **Subtema Oficial Escolhido:** Saúde mental, dependência digital e comportamento on-line.
 * **Tema Criado pela Equipe:** Ansiedade e dependência tecnológica na sociedade contemporânea: impactos do uso excessivo de tecnologias digitais na saúde mental.
-* **Pergunta de Pesquisa Master:** *"Como o uso excessivo de tecnologias digitais — especificamente o consumo frequente de conteúdos de curta duração — influencia os níveis de ansiedade e o déficit de atenção em atividades prolongadas, e que padrões de dados podem indicar caminhos para uma relação mais saudável com a tecnologia?"*
+* **Pergunta de Pesquisa Master:** *"Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia os níveis de ansiedade e o déficit de atenção nas atividades do dia a dia, e que padrões de dados podem indicar caminhos para uma relação mais saudável com a tecnologia?"*
 
-> ⚠️ **Ajuste necessário na pergunta:** nenhuma base oficial brasileira isola o consumo de **vídeos curtos**. A PNS mede o tempo de lazer em celular, tablet ou computador ("redes sociais, notícias, vídeos, jogos"). Sugestão para manter a pergunta defensável perante a banca: trocar "especificamente o consumo frequente de conteúdos de curta duração" por **"como o uso intenso de telas para lazer, que inclui redes sociais e vídeos curtos"**, e citar a limitação no Dossiê (já citada).
+> ✅ **Pergunta ajustada em 01/11/2026 para refletir o que os dados oficiais medem.** A versão anterior dizia *"especificamente o consumo frequente de conteúdos de curta duração"* e *"em atividades prolongadas"*. Nenhuma base oficial brasileira isola vídeos curtos: a PNS mede o tempo de lazer em celular, tablet ou computador ("redes sociais, notícias, vídeos, jogos"). E o item de atenção (N013) mede a concentração nas *atividades habituais*. A nova redação mantém os vídeos curtos no escopo, como parte do uso de telas, sem prometer um recorte que os dados não permitem. **Use esta versão em todos os materiais** (DreamShaper, slides, Dossiê).
+>
+> **Versão curta** (para títulos e capas): *"Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia os níveis de ansiedade e o déficit de atenção na sociedade contemporânea?"*
 
 ---
 

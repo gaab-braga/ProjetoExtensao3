@@ -62,6 +62,6 @@
 | "Então tela causa depressão?" | "Não podemos afirmar. O estudo é transversal: mostra associação. Pode ser que pessoas em sofrimento usem mais telas como fuga." |
 | "Por que a correlação é tão baixa se vocês dizem que há efeito?" | "Porque a relação não é linear. Até 3h não muda nada, e o efeito se concentra no topo. A correlação de Pearson/Spearman mede reta, e a reta 'dilui' o efeito do limiar." |
 | "Por que quem não usa tela também tem mais sintomas?" | "Porque é outro perfil: 47% têm 60+ anos e 67% ganham até 1 salário mínimo. É exclusão digital e envelhecimento, não efeito da tecnologia." |
-| "Isso fala de vídeos curtos?" | "Não diretamente. A pergunta do IBGE junta redes sociais, vídeos, notícias e jogos. Nenhuma base oficial isola o TikTok. Essa limitação está no dossiê." |
+| "Isso fala de vídeos curtos?" | "Não diretamente. A pergunta do IBGE junta redes sociais, vídeos, notícias e jogos. Nenhuma base oficial isola o TikTok. Por isso ajustamos a nossa pergunta de pesquisa para 'uso intenso de telas para lazer, que **inclui** redes sociais e vídeos curtos'. Ela promete exatamente o que os dados entregam." |
 | "Dados de 2019 não estão velhos?" | "São os mais recentes da PNS com esse módulo. E são pré-TikTok/pandemia, então o cenário atual tende a ser **pior**, não melhor." |
 | "E a ansiedade?" | "A PNS não tem escala de ansiedade. Usamos o diagnóstico autorreferido, que também mostra limiar: OR 1,42 em 6h+." |

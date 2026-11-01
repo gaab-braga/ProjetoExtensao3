@@ -2,7 +2,7 @@
 etl_processor.py — ETL dos microdados da PNS 2019 (IBGE) para o Dossiê de Evidências.
 
 Projeto de Extensão IESB · Grupo 1 (Problem Space)
-Pergunta: como o uso excessivo de tecnologias digitais influencia ansiedade e déficit de atenção?
+Pergunta: como o uso intenso de telas para lazer (inclui redes sociais e vídeos curtos) influencia ansiedade e déficit de atenção?
 
 Fonte oficial: IBGE — Pesquisa Nacional de Saúde 2019, microdados (arquivo de posição fixa PNS_2019.txt).
   https://ftp.ibge.gov.br/PNS/2019/Microdados/Dados/
