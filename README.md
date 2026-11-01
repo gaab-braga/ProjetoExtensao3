@@ -16,6 +16,7 @@
 | 4. Análise estatística | `analise_exploratoria.py` | ✅ correlações, confundidores, regressões, gráficos |
 | 5. Dossiê | [`Dossie_Evidencias_Quantitativas.md`](Dossie_Evidencias_Quantitativas.md) + `outputs/graficos/*.png` | ✅ entregue |
 | Standup | [`docs/03_Guia_Standup.md`](docs/03_Guia_Standup.md) | ✅ roteiro e papel de cada arquivo |
+| Equipe | [`docs/Guia_Operacional_G1.md`](docs/Guia_Operacional_G1.md) | ✅ guia operacional atualizado com os resultados |
 
 ## Principal achado
 A correlação linear é desprezível (ρ = 0,02), mas existe um **limiar**: acima de 3h/dia de tela de lazer o risco sobe, e com **6h+/dia** as chances são **72% maiores para depressão (PHQ-9 ≥ 10)** e **62% maiores para dificuldade de concentração** (ajustado). **59%** dos adolescentes de 15–17 anos usam 3h+/dia, e as mulheres têm 2,5× mais sintomas (ODS 5).
