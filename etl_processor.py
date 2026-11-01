@@ -56,6 +56,7 @@ LAYOUT: dict[str, tuple[int, int]] = {
     "VDD004A": (1514, 1),   # Nível de instrução (1 sem instrução ... 7 superior completo)
     "VDF004": (1535, 1),    # Faixa de rendimento domiciliar per capita (em salários mínimos)
     "A01901": (81, 1),      # Algum morador tem acesso à internet no domicílio
+    "D00201": (136, 1),     # Frequenta escola (1 sim, 2 não)
     "C011": (133, 1),       # Estado civil (1 casado, 2 divorciado/separado, 3 viúvo, 4 solteiro)
     "VDE001": (1515, 1),    # Condição na força de trabalho (1 na força, 2 fora)
     "VDE002": (1516, 1),    # Condição de ocupação (1 ocupado, 2 desocupado)
@@ -239,6 +240,7 @@ def transformar(df: pd.DataFrame, rel: dict) -> pd.DataFrame:
     for v in ("Q092", "Q11006", "C006"):
         validar_codigos(df, v, {1, 2}, rel)
     validar_codigos(df, "C011", set(ESTADO_CIVIL), rel)
+    validar_codigos(df, "D00201", {1, 2}, rel)
 
     out = pd.DataFrame(index=df.index)
     # identificação e desenho amostral
@@ -258,6 +260,7 @@ def transformar(df: pd.DataFrame, rel: dict) -> pd.DataFrame:
     out["escolaridade"] = df["VDD004A"].where(df["VDD004A"].between(1, 7)).astype("Int64")
     out["renda_faixa"] = df["VDF004"].where(df["VDF004"].between(1, 7)).astype("Int64")
     out["internet_domicilio"] = df["A01901"].map(SIM_NAO).astype("Int64")
+    out["frequenta_escola"] = df["D00201"].map(SIM_NAO).astype("Int64")
     out["regiao"] = (df["V0001"] // 10).map(REGIAO)
     out["estado_civil"] = df["C011"].map(ESTADO_CIVIL)
     out["ocupacao"] = np.select([df["VDE002"] == 1, df["VDE002"] == 2, df["VDE001"] == 2],

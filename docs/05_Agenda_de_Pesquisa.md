@@ -60,6 +60,9 @@ Este documento é intencionalmente **aberto**. Ele registra o que os dados da PN
 - BARROS, A. J. D.; HIRAKATA, V. N. Alternatives for logistic regression in cross-sectional studies: an empirical comparison of models that directly estimate the prevalence ratio. *BMC Medical Research Methodology*, v. 3, art. 21, 2003.
 - BONETT, D. G.; WRIGHT, T. A. Sample size requirements for estimating Pearson, Kendall and Spearman correlations. *Psychometrika*, v. 65, n. 1, p. 23–28, 2000.
 - BRASIL. Conselho Nacional de Saúde. Resolução nº 510, de 7 de abril de 2016.
+- BRASIL. Lei nº 13.709, de 14 de agosto de 2018. Lei Geral de Proteção de Dados Pessoais (LGPD).
+- BRASIL. Lei nº 15.211, de 2025. Estatuto Digital da Criança e do Adolescente (ECA Digital). Em vigor desde 17 de março de 2026.
+- CVV — CENTRO DE VALORIZAÇÃO DA VIDA. Apoio emocional e prevenção do suicídio: telefone 188 (gratuito, 24 horas). Disponível em: https://cvv.org.br.
 - HAIDT, J. *The Anxious Generation: how the great rewiring of childhood is causing an epidemic of mental illness*. 2024.
 - IBGE. *Pesquisa Nacional de Saúde 2019: microdados*. Rio de Janeiro: IBGE, 2022.
 - KNOL, M. J.; VANDERWEELE, T. J. Recommendations for presenting analyses of effect modification and interaction. *International Journal of Epidemiology*, v. 41, n. 2, p. 514–520, 2012.

@@ -566,6 +566,43 @@ def main() -> None:
         "6h+": df.loc[df["tela_lazer_ord"] == 5, "peso"].sum() / 1e6,
         "6h+ e PHQ-9>=10": df.loc[(df["tela_lazer_ord"] == 5) & casos, "peso"].sum() / 1e6}
 
+    # --- 6b. Indicadores e perfil do segmento-alvo para o Grupo 2 ----------------
+    df["tela_6h"] = (df["tela_lazer_ord"] == 5).astype(int)
+    df["faixa_jovem"] = np.where(df["jovem"] == 1, "15–24", "25+")
+    ind = []
+    for indicador, y in [("Uso de tela de lazer 3h+/dia", "tela_3h"), ("Uso de tela de lazer 6h+/dia", "tela_6h")]:
+        for grupos in (["faixa_etaria"], ["sexo"], ["faixa_etaria", "sexo"]):
+            for linha in tabela_prevalencia(df, y, grupos).to_dict("records"):
+                ind.append({"indicador": indicador, "recorte": " · ".join(str(linha[g]) for g in grupos), **{k: linha[k] for k in ("pct", "ic_inf", "ic_sup", "n")}})
+    for y, rot in DESFECHOS.items():
+        for grupos in (["tela_cat", "sexo"], ["tela_cat", "faixa_jovem"]):
+            for linha in tabela_prevalencia(df, y, grupos).to_dict("records"):
+                ind.append({"indicador": rot, "recorte": " · ".join(str(linha[g]) for g in grupos), **{k: linha[k] for k in ("pct", "ic_inf", "ic_sup", "n")}})
+    pd.DataFrame(ind).round(2).to_csv(OUT / "indicadores_grupo2.csv", index=False)
+
+    segmentos = {"15–24 anos, 6h+/dia": (df["jovem"] == 1) & (df["tela_lazer_ord"] == 5),
+                 "15–24 anos, 3h+/dia": (df["jovem"] == 1) & (df["tela_3h"] == 1),
+                 "15–24 anos, usuários com <3h/dia": (df["jovem"] == 1) & df["usuario"] & (df["tela_3h"] == 0),
+                 "Mulheres 15–24 anos, 6h+/dia": (df["jovem"] == 1) & (df["tela_lazer_ord"] == 5) & (df["sexo_feminino"] == 1)}
+    aux = df.assign(renda_ate_1sm=(df["renda_faixa"] <= 3).astype(float).where(df["renda_faixa"].notna()),
+                    urbano=1 - df["zona_rural"], ocupado=(df["ocupacao"] == "Ocupado").astype(int),
+                    fora_forca=(df["ocupacao"] == "Fora da força de trabalho").astype(int),
+                    idade_15_17=(df["faixa_etaria"] == "15–17").astype(int))
+    metricas = {"idade_media": "idade", "pct_15_17": "idade_15_17", "pct_mulheres": "sexo_feminino",
+                "pct_frequenta_escola": "frequenta_escola", "pct_ocupado": "ocupado", "pct_fora_forca_trabalho": "fora_forca",
+                "pct_renda_ate_1SM": "renda_ate_1sm", "pct_urbano": "urbano", "pct_internet_domicilio": "internet_domicilio",
+                "pct_phq9_10": "phq9_depressao", "pct_concentracao_frequente": "concentracao_frequente",
+                "pct_sono_frequente": "sono_frequente", "pct_diag_ansiedade_outros": "diag_outro_transtorno_mental"}
+    perfil_seg = {}
+    for nome, dom in segmentos.items():
+        linha = {"n": int(dom.sum()), "populacao_milhoes": float(df.loc[dom, "peso"].sum() / 1e6)}
+        for chave, col in metricas.items():
+            est, se, _ = media_amostral(aux, col, dom)
+            fator = 1 if chave == "idade_media" else 100
+            linha[chave] = {"valor": fator * est, "ic95": [fator * (est - 1.96 * se), fator * (est + 1.96 * se)]}
+        perfil_seg[nome] = linha
+    res["perfil_segmento_alvo"] = perfil_seg
+
     # --- 7. Gráficos e saída ----------------------------------------------------
     grafico_scatter(df, cor)
     res["matriz_spearman"] = grafico_heatmap(df).round(4).to_dict()

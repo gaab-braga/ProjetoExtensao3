@@ -193,6 +193,8 @@ Teste de interação (usuários, 3h+ vs <3h): RP de 1,40 nos jovens de 15–24 e
 
 ## 6. Para o Grupo 2 (Solution Space)
 
+> 📦 **Pacote de passagem:** [Briefing](docs/06_Briefing_Grupo2.md) (comece por ele) · [Árvore de Problemas](docs/07_Arvore_de_Problemas.md) · [Ficha da Persona](docs/08_Persona_Ficha_de_Dados.md) · [`indicadores_grupo2.csv`](outputs/indicadores_grupo2.csv)
+
 1. **Meta de limiar, não abstinência.** Os dados não mostram prejuízo até ~3h/dia, e quem não usa nada também tem mais sintomas. A meta defensável é **manter o lazer em telas abaixo de ~3h/dia**, com atenção especial a quem passa de 6h.
 2. **Público prioritário: 15 a 24 anos.** O efeito por pessoa é o mesmo, mas é ali que está a exposição: 1 em cada 3 adolescentes usa 6h+.
 3. **Desenho sensível a gênero.** Mulheres jovens com uso intenso formam o grupo de maior prevalência (~20%).
@@ -229,7 +231,8 @@ python analise_exploratoria.py  # ~1,5 min (inclui 144 modelos)
 | Artefato | Conteúdo |
 |---|---|
 | `data/processed/etl_relatorio.json` | Contagens de cada filtro, distribuição dos códigos, SHA-256 do dado bruto |
-| `outputs/resultados_estatisticos.md` / `.json` | Todas as tabelas, incluindo as 144 especificações |
+| `outputs/resultados_estatisticos.md` / `.json` | Todas as tabelas, incluindo as 144 especificações e o perfil do segmento-alvo |
+| `outputs/indicadores_grupo2.csv` | 112 indicadores ponderados com IC 95% para o Grupo 2 |
 | `outputs/graficos/01–06_*.png` | Gráficos do Dossiê |
 
 ## 9. Referências

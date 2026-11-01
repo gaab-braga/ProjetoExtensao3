@@ -53,6 +53,15 @@
 | `outputs/graficos/05_dose_resposta_RP.png` ⭐ | **Gráfico principal**: razão de prevalência ajustada por faixa de tela, para 3 desfechos | Acima da linha 1 = mais prevalência; o formato é uma curva em J | "Até ~3h a prevalência é estável; depois sobe. É um **limiar**, não uma reta. Esse é o número que o Grupo 2 deve usar." |
 | `outputs/graficos/06_specification_curve.png` | 144 análises alternativas, cada ponto um modelo | Todos os pontos acima da linha 1 = resultado robusto | "O resultado não depende de escolhas convenientes: apareceu em 144 de 144 análises." |
 | `outputs/resultados_estatisticos.md` / `.json` | Todas as tabelas numéricas | Fonte de cada número citado | "Cada número do dossiê tem rastreabilidade." |
+| `outputs/indicadores_grupo2.csv` | 112 indicadores prontos (prevalências com IC) | Planilha para o Grupo 2 | "O Grupo 2 não precisa refazer a estatística: os números já estão prontos." |
+
+### Pacote para o Grupo 2
+
+| Arquivo | O que é | Frase para o standup |
+|---|---|---|
+| `docs/06_Briefing_Grupo2.md` | Passagem: problema, pergunta "Como poderíamos", público, princípios de design, métricas, restrições legais | "Entregamos ao Grupo 2 o problema traduzido em requisitos de produto, incluindo LGPD, ECA Digital e um protocolo de segurança." |
+| `docs/07_Arvore_de_Problemas.md` | Causas e efeitos com selo de origem (dado, literatura ou hipótese) | "Separamos o que os dados provam do que ainda é hipótese." |
+| `docs/08_Persona_Ficha_de_Dados.md` | Retrato estatístico de quem usa 6h+ | "Os dados derrubaram um estereótipo: o público não é só universitário de classe média." |
 
 ### Entregável final
 

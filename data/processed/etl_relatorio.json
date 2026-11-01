@@ -104,6 +104,10 @@
       "2": 7514,
       "3": 7628,
       "4": 40560
+    },
+    "D00201": {
+      "1": 8457,
+      "2": 82389
     }
   },
   "ignorados_9_convertidos_em_nulo": {
@@ -121,7 +125,8 @@
     "Q092": 0,
     "Q11006": 0,
     "C006": 0,
-    "C011": 0
+    "C011": 0,
+    "D00201": 0
   },
   "nulos_por_coluna": {
     "uf": 0,
@@ -137,6 +142,7 @@
     "escolaridade": 0,
     "renda_faixa": 22,
     "internet_domicilio": 0,
+    "frequenta_escola": 0,
     "regiao": 0,
     "estado_civil": 0,
     "ocupacao": 0,

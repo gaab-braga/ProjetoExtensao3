@@ -81,7 +81,7 @@ O Marketing entende de público, concorrência e como contar uma história.
   * **Criar a Persona:** Quem é a pessoa que vamos ajudar? (Ex: "Lucas, 22 anos, estudante universitário, passa 4h/dia no TikTok e não consegue focar 30 min em um livro sem sentir ansiedade").
   * **Análise de Mercado (Benchmarking):** Quais soluções já existem para combater isso? (Apps como Forest, Modo Foco do celular, bloqueadores de sites). Por que essas soluções *falham*? Onde elas deixam a desejar? (Isso é o que o Grupo 2 vai usar para inovar).
   * **Storytelling do DreamShaper:** Ao final, transformar os achados de todos em um texto coeso e persuasivo para jogar na plataforma do IESB.
-* **🔄 Ajuste da persona com base nos dados:** o perfil de maior risco é **jovem (15–24 anos), mulher, com 3h+ de tela de lazer por dia**. Sugestão: *"Ana, 19 anos, universitária, passa 6h por dia em redes sociais e vídeos no tempo livre, tem dificuldade de concentração na maioria dos dias e sente-se 'pra baixo' com frequência."* Cada traço tem respaldo estatístico (seção 5).
+* **🔄 Ajuste da persona com base nos dados:** o perfil de maior risco é **jovem (15–24 anos), mulher, com 3h+ de tela de lazer por dia**. A ficha estatística completa, com um esboço narrativo e o roteiro de entrevistas, está em [`08_Persona_Ficha_de_Dados.md`](08_Persona_Ficha_de_Dados.md). Atenção: os dados mostram que o público **não é só universitário**. Metade não estuda, 4 em 10 trabalham, 2/3 vivem com até 1 salário mínimo por pessoa e 1 em cada 3 é menor de idade.
 
 #### 💻 Os Desenvolvedores / Analistas de Dados (2 pessoas) — ✅ CONCLUÍDO
 
@@ -101,8 +101,9 @@ Quando as trilhas se encontrarem, o Marketing e o RH pegam os gráficos dos Devs
 
 1. **A Questão de Pesquisa Fechada** (O nosso "HMW - How Might We / Como Poderíamos"). → **Proposta pelos dados:** *"Como poderíamos ajudar jovens que passam mais de 3 horas por dia em telas de lazer a reduzir esse tempo, de modo a proteger sua concentração e seu bem-estar emocional?"*
 2. **O Painel de Evidências (Gerado pelos Devs):** Gráficos provando estatisticamente a relação entre tecnologia e saúde mental. → ✅ `outputs/graficos/01` a `06` + [Dossiê](../Dossie_Evidencias_Quantitativas.md) (v2, com revisão metodológica)
-3. **A Árvore de Problemas e a Literatura (Gerado pelo RH):** A fundamentação teórica de por que isso afeta a saúde mental.
-4. **A Persona e o Cenário (Gerado pelo Marketing):** Quem sofre com isso e por que os apps atuais de "bem-estar digital" não estão funcionando.
+3. **A Árvore de Problemas e a Literatura (Gerado pelo RH):** A fundamentação teórica de por que isso afeta a saúde mental. → 🟡 Rascunho baseado em evidências em [`07_Arvore_de_Problemas.md`](07_Arvore_de_Problemas.md) (para o RH revisar) + literatura verificada em [`05_Agenda_de_Pesquisa.md`](05_Agenda_de_Pesquisa.md)
+4. **A Persona e o Cenário (Gerado pelo Marketing):** Quem sofre com isso e por que os apps atuais de "bem-estar digital" não estão funcionando. → 🟡 Base estatística em [`08_Persona_Ficha_de_Dados.md`](08_Persona_Ficha_de_Dados.md); o benchmarking de apps é da trilha do Marketing
+5. **Briefing de passagem:** → ✅ [`06_Briefing_Grupo2.md`](06_Briefing_Grupo2.md): o documento que o Grupo 2 lê primeiro
 
 ---
 
@@ -184,3 +185,7 @@ Quando as trilhas se encontrarem, o Marketing e o RH pegam os gráficos dos Devs
 | `outputs/resultados_estatisticos.md` | Quem quiser os detalhes | Todas as tabelas numéricas |
 | [`docs/04_Rigor_Metodologico.md`](04_Rigor_Metodologico.md) | **Todos** (antes do standup) | Método científico aplicado, STROBE, ética, o que foi corrigido e reavaliação da pergunta |
 | [`docs/05_Agenda_de_Pesquisa.md`](05_Agenda_de_Pesquisa.md) | RH e quem quiser aprofundar | Posicionamento na literatura, perguntas abertas e referências verificadas |
+| [`docs/06_Briefing_Grupo2.md`](06_Briefing_Grupo2.md) | **Grupo 2** | Passagem: público, princípios de design, métricas, restrições éticas e legais |
+| [`docs/07_Arvore_de_Problemas.md`](07_Arvore_de_Problemas.md) | RH | Rascunho da árvore com dado × literatura × hipótese |
+| [`docs/08_Persona_Ficha_de_Dados.md`](08_Persona_Ficha_de_Dados.md) | Marketing | Retrato estatístico do público-alvo + roteiro de entrevistas |
+| `outputs/indicadores_grupo2.csv` | Marketing e Grupo 2 | 112 indicadores prontos para gráficos e protótipos |
