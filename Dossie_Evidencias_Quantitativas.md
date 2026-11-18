@@ -2,8 +2,9 @@
 ### Uso intenso de telas e saúde mental no Brasil — PNS 2019 (IBGE)
 
 **Projeto de Extensão IESB · Grupo 1 (Problem Space) → entrega para o Grupo 2 (Solution Space)**
-**Tema norteador:** Saúde Mental · **ODS 3** (Saúde e Bem-Estar) · **ODS 5** (Igualdade de Gênero), justificado na seção 4.5
+**Tema norteador:** Saúde Mental · **ODS 3** (Saúde e Bem-Estar; meta 3.4: promover a saúde mental e o bem-estar) · **ODS 5** (Igualdade de Gênero), justificado na seção 4.5
 **Pergunta de pesquisa:** *Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia a saúde mental, em especial a ansiedade e os sintomas depressivos, e o déficit de atenção na sociedade contemporânea?*
+**Comunidade estudada:** Brasil — população de 15+ anos representada pela PNS 2019; público prioritário: jovens de 15 a 24 anos
 **Versão 2 (01/11/2026):** revisão metodológica completa. Mudanças e justificativas em [`docs/04_Rigor_Metodologico.md`](docs/04_Rigor_Metodologico.md).
 
 ---
@@ -26,6 +27,8 @@
 ---
 
 ## 2. Fonte dos dados e justificativa
+
+**Contexto:** a Organização Mundial da Saúde estima que **970 milhões de pessoas** viviam com algum transtorno mental em 2019 (OMS, 2022). Esta pesquisa olha para um fator de risco contemporâneo dentro desse quadro: o uso intenso de telas.
 
 **Fonte:** IBGE, *Pesquisa Nacional de Saúde 2019*, microdados (`PNS_2019_20220525.zip`, SHA-256 `a789f6b0…be6057`), baixados do FTP oficial. A metodologia da pesquisa está em Stopa et al. (2020).
 
@@ -237,4 +240,4 @@ python analise_exploratoria.py  # ~1,5 min (inclui 144 modelos)
 
 ## 9. Referências
 
-Lista completa e verificada em [`docs/05_Agenda_de_Pesquisa.md`](docs/05_Agenda_de_Pesquisa.md#referências-todas-verificadas). Principais: Barros & Hirakata (2003); Knol & VanderWeele (2012); Lumley (2004); Melo et al. (2023); Orben & Przybylski (2019); Przybylski & Weinstein (2017); Santos et al. (2013); Simonsohn, Simmons & Nelson (2020); Stopa et al. (2020); VanderWeele & Ding (2017); von Elm et al. (2007); Werneck et al. (2018).
+Lista completa e verificada em [`docs/05_Agenda_de_Pesquisa.md`](docs/05_Agenda_de_Pesquisa.md#referências-todas-verificadas). Principais: Barros & Hirakata (2003); Knol & VanderWeele (2012); Lumley (2004); Melo et al. (2023); Orben & Przybylski (2019); Przybylski & Weinstein (2017); Santos et al. (2013); Simonsohn, Simmons & Nelson (2020); Stopa et al. (2020); VanderWeele & Ding (2017); von Elm et al. (2007); Werneck et al. (2018); OMS (2022).

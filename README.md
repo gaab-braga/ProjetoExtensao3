@@ -10,13 +10,14 @@ Evidências quantitativas a partir dos microdados oficiais da Pesquisa Nacional 
 | | |
 |---|---|
 | **Tema norteador** | Saúde Mental |
-| **ODS** | **ODS 3** — Saúde e Bem-Estar (principal) · **ODS 5** — Igualdade de Gênero (justificado pelos dados, [Dossiê §4.5](Dossie_Evidencias_Quantitativas.md#45-gênero-ods-5)) |
+| **ODS** | **ODS 3** — Saúde e Bem-Estar (principal; meta 3.4: promover a saúde mental e o bem-estar) · **ODS 5** — Igualdade de Gênero (justificado pelos dados, [Dossiê §4.5](Dossie_Evidencias_Quantitativas.md#45-gênero-ods-5)) |
 | **Área do conhecimento** | Ciências Exatas e da Terra / Tecnológicas |
 | **Subtema oficial** | Saúde mental, dependência digital e comportamento on-line |
 | **Tema da equipe** | Ansiedade e dependência tecnológica na sociedade contemporânea: impactos do uso excessivo de tecnologias digitais na saúde mental |
 | **Pergunta de pesquisa** | *Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia a saúde mental, em especial a ansiedade e os sintomas depressivos, e o déficit de atenção nas atividades do dia a dia, e que padrões de dados podem indicar caminhos para uma relação mais saudável com a tecnologia?* |
 | **Fase (Double Diamond)** | Problem Space: **Descobrir** e **Definir** |
 | **Base de dados** | IBGE — Pesquisa Nacional de Saúde 2019, microdados oficiais (n = 90.846; representa 168 milhões de brasileiros com 15+ anos) |
+| **Comunidade estudada** | Brasil — população de 15+ anos representada pela PNS 2019; público prioritário: jovens de 15 a 24 anos |
 
 ## Principal achado
 
@@ -44,6 +45,7 @@ Até cerca de **3 horas por dia** de tela de lazer (celular, tablet ou computado
 | **Base de dados pública e oficial** | Microdados da PNS 2019 baixados do FTP do IBGE, com integridade registrada (SHA-256) | [`docs/01`](docs/01_Data_Discovery.md) · [`docs/02`](docs/02_Aquisicao_Dados.md) · [`etl_relatorio.json`](data/processed/etl_relatorio.json) |
 | **Problem Space** (Double Diamond) | Descobrir: mapeamento de 6 bases oficiais. Definir: evidência + pergunta "Como poderíamos" | [`docs/01`](docs/01_Data_Discovery.md) · [Dossiê](Dossie_Evidencias_Quantitativas.md) |
 | **Dossiê para o Grupo 2** | Painel de evidências, pergunta "Como poderíamos", briefing, árvore de problemas e ficha da persona | [`docs/06`](docs/06_Briefing_Grupo2.md) · [`docs/07`](docs/07_Arvore_de_Problemas.md) · [`docs/08`](docs/08_Persona_Ficha_de_Dados.md) |
+| Devolutiva do conhecimento à comunidade | Pesquisa pública e aberta (GitHub, CC BY 4.0), com indicadores reutilizáveis por escolas, gestores e outros projetos | [`indicadores_grupo2.csv`](outputs/indicadores_grupo2.csv) · [Licença](LICENSE-docs.md) |
 | Rigor e honestidade científica | Validação externa (2 prevalências oficiais reproduzidas), razão de prevalência, desenho amostral, FDR, specification curve, STROBE | [`docs/04`](docs/04_Rigor_Metodologico.md) |
 
 ---
