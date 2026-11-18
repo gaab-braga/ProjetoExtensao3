@@ -79,3 +79,4 @@ Este documento é intencionalmente **aberto**. Ele registra o que os dados da PN
 - VANDERWEELE, T. J.; DING, P. Sensitivity analysis in observational research: introducing the E-value. *Annals of Internal Medicine*, v. 167, n. 4, p. 268–274, 2017.
 - VON ELM, E. et al. The Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement. *PLoS Medicine*, v. 4, n. 10, e296, 2007.
 - WERNECK, A. O. et al. Associations between TV viewing and depressive symptoms among 60,202 Brazilian adults: the Brazilian National Health Survey. *Journal of Affective Disorders*, v. 236, p. 23–30, 2018.
+- WORLD HEALTH ORGANIZATION. *World mental health report: transforming mental health for all*. Geneva: WHO, 2022. ISBN 9789240049338.

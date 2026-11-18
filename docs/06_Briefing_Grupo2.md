@@ -60,17 +60,19 @@ Comparações entre parênteses são descritivas, sem ajuste. Ficha completa: [`
 |---|---|---|
 | Tempo de tela de lazer | **Mesmas 6 faixas da PNS**: não usa, <1h, 1–2h, 2–3h, 3–6h, 6h+ | Permite comparar o usuário com a média nacional |
 | % de usuários abaixo de 3h/dia | Proporção na faixa ≤ 2–3h | Traduz a meta de limiar |
-| Sintomas depressivos | **PHQ-9**: uso livre, sem necessidade de permissão, citando os autores (Kroenke, Spitzer & Williams, 2001) | Mesma escala do Dossiê. **É rastreio, não diagnóstico** |
-| Concentração | Item do PHQ-9: "problemas para se concentrar nas atividades habituais" | Mesmo item usado no Dossiê (N013) |
+| Sono | Autopercepção, com pergunta simples e sem escala clínica (ex.: "Nas últimas 2 semanas, com que frequência você dormiu mal?") | O sono é uma queixa frequente no público-alvo |
+| Concentração | Autopercepção, com pergunta simples (ex.: "Com que frequência teve dificuldade de se concentrar nas atividades do dia a dia?") | É o desfecho de atenção da pesquisa, traduzido para linguagem não clínica |
+
+> O **PHQ-9** é a medida da **pesquisa** (dados do IBGE). A equipe **não aplica questionários clínicos**, por limite ético da disciplina: estudantes não fazem avaliação clínica.
 
 ## 7. Restrições éticas e legais (obrigatórias)
 
 | Tema | O que observar |
 |---|---|
-| **Dados de saúde** | Respostas a questionários como o PHQ-9 são **dado pessoal sensível** pela LGPD (Lei 13.709/2018, art. 5º, II), com bases legais restritas (art. 11). Coletar o mínimo necessário |
+| **Dados de saúde** | Respostas sobre saúde (sono, humor, concentração) são **dado pessoal sensível** pela LGPD (Lei 13.709/2018, art. 5º, II), com bases legais restritas (art. 11). Coletar o mínimo necessário |
 | **Menores de idade** | 1/3 do público tem 15–17 anos. A LGPD exige consentimento específico de pelo menos um responsável (art. 14, §1º). O **ECA Digital** (Lei 15.211/2025), em vigor desde 17/03/2026, impõe obrigações a aplicativos de provável acesso por crianças e adolescentes, como verificação de idade sem mera autodeclaração. **Validar com orientação jurídica** antes de lançar |
-| **Item 9 do PHQ-9 (ideação suicida)** | Se a solução usar o PHQ-9, qualquer resposta positiva no item 9 deve disparar um **protocolo de acolhimento**: mensagem de cuidado e encaminhamento ao **CVV, telefone 188** (gratuito, 24 horas). Os próprios materiais do PHQ-9 alertam que o item pode mobilizar sentimentos difíceis |
-| **Sem diagnóstico** | A solução **não pode** dizer que o usuário "tem depressão" ou "tem ansiedade". O PHQ-9 indica necessidade de avaliação profissional |
+| **Sofrimento emocional** | Se a solução abordar sofrimento emocional, sempre indicar o **CVV, telefone 188** (gratuito, 24 horas), e os serviços da rede pública (UBS, CAPS) |
+| **Sem diagnóstico** | A solução **não pode** fazer diagnóstico nem avaliação clínica, nem dizer que o usuário "tem depressão" ou "tem ansiedade". Ela orienta a procurar um profissional |
 
 ## 8. O que a solução não pode prometer
 
