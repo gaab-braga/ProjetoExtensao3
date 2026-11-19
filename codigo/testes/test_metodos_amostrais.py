@@ -8,7 +8,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from metodos_amostrais import e_value, fap, media_amostral, reri, svyglm, wald  # noqa: E402
-from etl_processor import PHQ_ORDINAL, TELA_ORDINAL, phq9_algoritmo  # noqa: E402
+from preparacao_dos_dados import PHQ_ORDINAL, TELA_ORDINAL, phq9_algoritmo  # noqa: E402
 
 
 @pytest.fixture(scope="module")

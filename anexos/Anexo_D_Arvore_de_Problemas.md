@@ -1,10 +1,10 @@
-# Árvore de Problemas (rascunho baseado em evidências)
+# Anexo D — Árvore de Problemas
 
-**Projeto de Extensão IESB · Grupo 1 · Insumo para a trilha qualitativa (RH)**
+**Projeto de Extensão IESB · Trilha de Pesquisa · Saúde Mental** · [← Relatório Final](../RELATORIO_FINAL_DA_PESQUISA.md)
 
 > **Como ler:** cada elemento tem um selo que diz **de onde vem a afirmação**. Isso evita apresentar hipótese como fato.
 >
-> 🟢 **Dado PNS 2019:** medido nos microdados oficiais (com número) · 🔵 **Literatura verificada:** referência real, conferida · ⚪ **Hipótese:** plausível, mas precisa de revisão de literatura pelo RH ou de pesquisa com usuários
+> 🟢 **Dado PNS 2019:** medido nos microdados oficiais (com número) · 🔵 **Literatura verificada:** referência real, conferida · ⚪ **Hipótese:** plausível, mas precisa de revisão de literatura ou de pesquisa qualitativa
 >
 > ⚠️ A PNS é transversal: ela mostra **associações**, não causas. As setas "causa → problema → efeito" abaixo são o **modelo explicativo proposto**, não algo provado pelos dados.
 
@@ -53,11 +53,11 @@ flowchart TB
 
 | Elemento | Selo | Evidência |
 |---|---|---|
-| Uso de telas para lazer acima de ~3h/dia | 🟢 | 24,2% dos brasileiros 15+ (40,8 milhões); 9,9% acima de 6h (16,6 milhões). O limiar de ~3h é **exploratório**: surgiu da análise, sem ser hipótese prévia (`docs/04` §3) |
+| Uso de telas para lazer acima de ~3h/dia | 🟢 | 24,2% dos brasileiros 15+ (40,8 milhões); 9,9% acima de 6h (16,6 milhões). O limiar de ~3h é **exploratório**: surgiu da análise, sem ser hipótese prévia (Anexo C §3) |
 
 ### Causas e fatores associados
 
-| Elemento | Selo | O que se sabe | O que o RH deve investigar |
+| Elemento | Selo | O que se sabe | O que falta investigar |
 |---|---|---|---|
 | Juventude | 🟢 | O uso 3h+ cai de 58,8% (15–17) para 5,7% (60+). Associação descritiva, não causal | Por que essa fase da vida concentra o uso? (identidade, socialização, lazer acessível) |
 | Design persuasivo | ⚪🔵 | Haidt (2024) atribui o aumento de sofrimento em jovens ao smartphone e às redes; Odgers (2024, *Nature*) contesta a evidência causal. A PNS **não mede** design nem plataforma | Literatura sobre economia da atenção e recomendação algorítmica, tratando o tema como debate, não consenso |
@@ -78,10 +78,10 @@ flowchart TB
 
 ---
 
-## 3. Como o Grupo 2 usa esta árvore
+## 3. Leitura da árvore
 
-- **Atacar o problema central** (tempo acima de ~3h), não os efeitos diretamente: a solução não é clínica.
-- As **causas ⚪** são onde a pesquisa com usuários do Grupo 2 tem mais a descobrir.
-- O **ciclo hipotético** (sofrimento → fuga → mais tela → mais sofrimento) sugere que a solução também acolha quem já está em sofrimento. Ver o protocolo de segurança no [Briefing §7](06_Briefing_Grupo2.md#7-restrições-éticas-e-legais-obrigatórias).
+- O ponto de intervenção mais direto é o **problema central** (uso acima de ~3h/dia), e não os efeitos: ações de promoção da saúde não são clínicas.
+- As **causas ⚪** são onde estudos futuros, sobretudo qualitativos, têm mais a descobrir.
+- O **ciclo hipotético** (sofrimento → fuga para a tela → mais tela → mais sofrimento) indica que ações sobre o tema devem também acolher quem já está em sofrimento e indicar a rede de apoio (CVV 188, UBS, CAPS).
 
-Fontes dos números: [`outputs/resultados_estatisticos.md`](../outputs/resultados_estatisticos.md) e [`outputs/indicadores_grupo2.csv`](../outputs/indicadores_grupo2.csv). Referências: [`05_Agenda_de_Pesquisa.md`](05_Agenda_de_Pesquisa.md#referências-todas-verificadas).
+Fontes dos números: [`resultados/tabelas/resultados_estatisticos.md`](../resultados/tabelas/resultados_estatisticos.md) e [`resultados/tabelas/indicadores_por_grupo.csv`](../resultados/tabelas/indicadores_por_grupo.csv). Referências: [Anexo F](Anexo_F_Referencias_e_Questoes_Futuras.md#referências-todas-verificadas).
