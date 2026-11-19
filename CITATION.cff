@@ -1,16 +1,16 @@
 cff-version: 1.2.0
 message: "Se usar este material, cite-o conforme abaixo e cite também a fonte original dos dados (IBGE, Pesquisa Nacional de Saúde 2019)."
-title: "Uso intenso de telas e saúde mental no Brasil: Dossiê de Evidências Quantitativas a partir da PNS 2019"
+title: "Uso Intenso de Telas e Saúde Mental no Brasil: Evidências da Pesquisa Nacional de Saúde 2019"
 abstract: "Análise dos microdados da Pesquisa Nacional de Saúde 2019 (IBGE) sobre a associação entre tempo de tela de lazer (celular, tablet ou computador) e saúde mental (sintomas depressivos, ansiedade e dificuldade de concentração), com razão de prevalência sob desenho amostral complexo e specification curve. Projeto de Extensão do Centro Universitário IESB."
 authors:
-  - name: "Grupo 1 — Projeto de Extensão IESB"
+  - name: "Projeto de Extensão IESB — Trilha de Pesquisa (Saúde Mental)"
 type: software
 license:
   - MIT
   - CC-BY-4.0
 repository-code: "https://github.com/gaab-braga/ProjetoExtensao3"
 date-released: 2026-11-01
-version: "2.0"
+version: "3.0"
 keywords:
   - saúde mental
   - tempo de tela

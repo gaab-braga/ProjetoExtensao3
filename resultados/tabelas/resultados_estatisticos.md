@@ -1,4 +1,4 @@
-# Resultados estatísticos (gerado automaticamente por `analise_exploratoria.py`)
+# Resultados estatísticos (gerado automaticamente por `codigo/analise_estatistica.py`)
 
 Base: PNS 2019 — 90.846 pessoas de 15+ anos com tempo de tela e PHQ-9 completos. Toda inferência usa o desenho amostral (estrato + UPA + peso V00291).
 

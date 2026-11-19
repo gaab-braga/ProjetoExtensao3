@@ -1,6 +1,6 @@
-# Agenda de Pesquisa — reflexões, perguntas abertas e próximos passos
+# Anexo F — Referências e Questões Futuras
 
-**Projeto de Extensão IESB · Grupo 1**
+**Projeto de Extensão IESB · Trilha de Pesquisa · Saúde Mental** · [← Relatório Final](../RELATORIO_FINAL_DA_PESQUISA.md)
 
 Este documento é intencionalmente **aberto**. Ele registra o que os dados da PNS 2019 *sugerem mas não respondem*, para orientar uma revisão de literatura e um eventual aprofundamento (iniciação científica, TCC ou artigo). Nada aqui é conclusão: são **perguntas bem formuladas**.
 

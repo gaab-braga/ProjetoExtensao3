@@ -1,4 +1,4 @@
-# Versões exatas usadas para gerar os resultados do Dossiê v2 (reprodutibilidade)
+# Versões exatas usadas para gerar os resultados do Relatório Final (reprodutibilidade)
 pandas==3.0.5
 numpy==2.5.3
 scipy==1.18.1

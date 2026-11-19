@@ -1,11 +1,11 @@
 """
-analise_exploratoria.py — Análise estatística do Dossiê de Evidências (Grupo 1).
+analise_estatistica.py — Análise estatística da pesquisa (Relatório Final).
 
-Entrada : data/processed/pns2019_telas_saude_mental.csv  (gerado por etl_processor.py)
-Saídas  : outputs/graficos/01..06_*.png
-          outputs/resultados_estatisticos.json / .md
+Entrada : dados/processados/pns2019_telas_saude_mental.csv  (gerado por preparacao_dos_dados.py)
+Saídas  : resultados/figuras/Figura_1..6_*.png
+          resultados/tabelas/resultados_estatisticos.json / .md · indicadores_por_grupo.csv
 
-PLANO DE ANÁLISE (hierarquia declarada — ver docs/04_Rigor_Metodologico.md)
+PLANO DE ANÁLISE (hierarquia declarada — ver anexos/Anexo_C_Rigor_Metodologico.md)
   Exposição primária : P04502 (tempo livre/dia em celular, tablet ou computador para lazer), 6 categorias.
   Desfecho primário  : rastreio positivo para depressão, PHQ-9 >= 10.
   Hipótese primária  : H1 — entre usuários, mais tempo de tela associa-se a maior prevalência do desfecho
@@ -49,10 +49,10 @@ from metodos_amostrais import combinacao, e_value, fap, media_amostral, reri, sv
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-ROOT = Path(__file__).resolve().parent
-DADOS = ROOT / "data" / "processed" / "pns2019_telas_saude_mental.csv"
-OUT = ROOT / "outputs"
-GRAF = OUT / "graficos"
+ROOT = Path(__file__).resolve().parent.parent          # raiz do repositório
+DADOS = ROOT / "dados" / "processados" / "pns2019_telas_saude_mental.csv"
+OUT = ROOT / "resultados" / "tabelas"
+GRAF = ROOT / "resultados" / "figuras"
 
 TELA_ROTULO = {0: "Não usa", 1: "<1h", 2: "1–2h", 3: "2–3h", 4: "3–6h", 5: "6h+"}
 ORDEM_TELA = ["Não usa", "<1h", "1–2h", "2–3h", "3–6h", "6h+"]
@@ -169,7 +169,7 @@ def grafico_scatter(df: pd.DataFrame, cor: dict) -> None:
     fig.suptitle("Correlação descritiva: tempo de tela de lazer × sintomas — PNS 2019 (IBGE)", x=0.01, ha="left",
                  fontsize=13, fontweight="bold")
     fig.tight_layout()
-    fig.savefig(GRAF / "01_scatter_correlacao.png", dpi=160)
+    fig.savefig(GRAF / "Figura_1_Correlacao_tempo_de_tela_e_sintomas.png", dpi=160)
     plt.close(fig)
 
 
@@ -190,7 +190,7 @@ def grafico_heatmap(df: pd.DataFrame) -> pd.DataFrame:
     ax.tick_params(colors=INK2)
     ax.set_title("Matriz de correlações de Spearman — PNS 2019 (n = {:,})".format(len(df)).replace(",", "."), loc="left", fontsize=13)
     fig.tight_layout()
-    fig.savefig(GRAF / "02_heatmap_correlacoes.png", dpi=160)
+    fig.savefig(GRAF / "Figura_2_Matriz_de_correlacoes.png", dpi=160)
     plt.close(fig)
     return m
 
@@ -214,7 +214,7 @@ def grafico_barras_sexo(prev_dep: pd.DataFrame, prev_conc: pd.DataFrame) -> None
     fig.suptitle("Impacto demográfico: tempo de tela × saúde mental por sexo (ODS 3 e ODS 5) — PNS 2019",
                  x=0.01, ha="left", fontsize=13, fontweight="bold")
     fig.tight_layout()
-    fig.savefig(GRAF / "03_barras_sexo.png", dpi=160)
+    fig.savefig(GRAF / "Figura_5_Comparacao_por_sexo.png", dpi=160)
     plt.close(fig)
 
 
@@ -246,7 +246,7 @@ def grafico_barras_idade(prev_uso: pd.DataFrame, prev_dep_idade: pd.DataFrame) -
     ax.legend(loc="upper left", ncol=2)
     fig.suptitle("Impacto demográfico por idade — PNS 2019 (IBGE)", x=0.01, ha="left", fontsize=13, fontweight="bold")
     fig.tight_layout()
-    fig.savefig(GRAF / "04_barras_idade.png", dpi=160)
+    fig.savefig(GRAF / "Figura_4_Exposicao_por_idade.png", dpi=160)
     plt.close(fig)
 
 
@@ -272,7 +272,7 @@ def grafico_dose_resposta(modelos: dict) -> None:
     fig.suptitle("Dose-resposta: prevalências estáveis até 3h/dia e mais altas acima disso — PNS 2019",
                  x=0.01, ha="left", fontsize=13, fontweight="bold")
     fig.tight_layout()
-    fig.savefig(GRAF / "05_dose_resposta_RP.png", dpi=160)
+    fig.savefig(GRAF / "Figura_3_Dose_resposta_limiar_de_3h.png", dpi=160)
     plt.close(fig)
 
 
@@ -315,7 +315,7 @@ def grafico_spec_curve(specs: pd.DataFrame, dims: dict) -> None:
     fig.suptitle("Specification curve: a associação sobrevive às escolhas do analista?", x=0.01, ha="left",
                  fontsize=13, fontweight="bold")
     fig.tight_layout()
-    fig.savefig(GRAF / "06_specification_curve.png", dpi=160)
+    fig.savefig(GRAF / "Figura_6_Robustez_144_analises.png", dpi=160)
     plt.close(fig)
 
 
@@ -331,7 +331,7 @@ def fmt_rp(c: dict, chave: str = "RP", dec: int = 2) -> str:
 
 
 def escrever_markdown(res: dict) -> None:
-    L = ["# Resultados estatísticos (gerado automaticamente por `analise_exploratoria.py`)", "",
+    L = ["# Resultados estatísticos (gerado automaticamente por `codigo/analise_estatistica.py`)", "",
          f"Base: PNS 2019 — {res['n_total']:,} pessoas de 15+ anos com tempo de tela e PHQ-9 completos. "
          "Toda inferência usa o desenho amostral (estrato + UPA + peso V00291).".replace(",", "."), ""]
     v = res["validacao_externa"]
@@ -566,7 +566,7 @@ def main() -> None:
         "6h+": df.loc[df["tela_lazer_ord"] == 5, "peso"].sum() / 1e6,
         "6h+ e PHQ-9>=10": df.loc[(df["tela_lazer_ord"] == 5) & casos, "peso"].sum() / 1e6}
 
-    # --- 6b. Indicadores e perfil do segmento-alvo para o Grupo 2 ----------------
+    # --- 6b. Indicadores por grupo e perfil do público-alvo ---------------------
     df["tela_6h"] = (df["tela_lazer_ord"] == 5).astype(int)
     df["faixa_jovem"] = np.where(df["jovem"] == 1, "15–24", "25+")
     ind = []
@@ -578,7 +578,7 @@ def main() -> None:
         for grupos in (["tela_cat", "sexo"], ["tela_cat", "faixa_jovem"]):
             for linha in tabela_prevalencia(df, y, grupos).to_dict("records"):
                 ind.append({"indicador": rot, "recorte": " · ".join(str(linha[g]) for g in grupos), **{k: linha[k] for k in ("pct", "ic_inf", "ic_sup", "n")}})
-    pd.DataFrame(ind).round(2).to_csv(OUT / "indicadores_grupo2.csv", index=False)
+    pd.DataFrame(ind).round(2).to_csv(OUT / "indicadores_por_grupo.csv", index=False)
 
     segmentos = {"15–24 anos, 6h+/dia": (df["jovem"] == 1) & (df["tela_lazer_ord"] == 5),
                  "15–24 anos, 3h+/dia": (df["jovem"] == 1) & (df["tela_3h"] == 1),
@@ -609,7 +609,6 @@ def main() -> None:
     grafico_barras_sexo(prev_dep, prev_conc)
     grafico_barras_idade(prev_uso, prev_dep_idade)
     grafico_dose_resposta(modelos_rp)
-    (OUT / "graficos" / "05_dose_resposta_OR.png").unlink(missing_ok=True)
     (OUT / "resultados_estatisticos.json").write_text(json.dumps(res, ensure_ascii=False, indent=2, default=float))
     escrever_markdown(res)
 

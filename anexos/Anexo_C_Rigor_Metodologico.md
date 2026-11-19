@@ -1,6 +1,6 @@
-# Rigor Metodológico — diagnóstico, correções e reavaliação da linha de pesquisa
+# Anexo C — Rigor Metodológico (diagnóstico, correções e reavaliação da pergunta)
 
-**Projeto de Extensão IESB · Grupo 1 · Revisão metodológica de 01/11/2026**
+**Projeto de Extensão IESB · Trilha de Pesquisa · Saúde Mental** · [← Relatório Final](../RELATORIO_FINAL_DA_PESQUISA.md)
 
 Este documento responde a quatro perguntas da equipe:
 1. Aplicamos as melhores técnicas de análise de dados complexos?
@@ -19,7 +19,7 @@ A resposta é honesta: **o núcleo estava correto, mas havia lacunas que um revi
 | Técnicas de análise de dados complexos | Pesos amostrais nas prevalências; regressão logística com EP só por conglomerado | **Desenho completo (estrato + UPA + peso) em todos os modelos**, com estimação por domínio (`metodos_amostrais.py`, validado por testes) |
 | Estrutura internacional | Nenhum checklist formal | Checklist **STROBE** (seção 6) + recomendações de relato de interação (Knol & VanderWeele, 2012) |
 | Método científico | Pergunta → dados → análise, mas **sem hierarquia de hipóteses declarada**, e com análises acrescentadas depois de ver os dados | Hipótese primária declarada; secundárias com correção de multiplicidade; o exploratório é rotulado como tal; histórico analítico transparente (seção 3); specification curve contra a flexibilidade analítica |
-| Distância até uma publicação | Material de dossiê | Base de nível de **congresso/anais** com fundamentos de periódico. Os passos que faltam estão em [`05_Agenda_de_Pesquisa.md`](05_Agenda_de_Pesquisa.md) |
+| Distância até uma publicação | Material de dossiê | Base de nível de **congresso/anais** com fundamentos de periódico. Os passos que faltam estão em [Anexo F](Anexo_F_Referencias_e_Questoes_Futuras.md) |
 
 ---
 
@@ -27,16 +27,16 @@ A resposta é honesta: **o núcleo estava correto, mas havia lacunas que um revi
 
 | Etapa | O que fizemos | Evidência no repositório |
 |---|---|---|
-| **1. Pergunta** | Pergunta de pesquisa ajustada ao que os dados medem | `docs/Guia_Operacional_G1.md` §1 |
-| **2. Revisão do conhecimento** | Mapeamento de 6 bases oficiais; posicionamento frente a estudos que já usam a PNS | `docs/01`, `docs/05` |
-| **3. Hipóteses** | H1 primária + secundárias + exploratórias (abaixo) | `analise_exploratoria.py` (docstring) |
-| **4. Operacionalização** | Cada construto ligado a uma variável oficial, com códigos conferidos contra o dicionário do IBGE | `etl_processor.py`, `docs/01` §3 |
-| **5. Coleta** | Fonte primária (FTP do IBGE), com integridade registrada (SHA-256 do arquivo) | `data/processed/etl_relatorio.json` |
-| **6. Validação da medida** | Reproduzimos as **duas** prevalências oficiais publicadas (seção 5) | `outputs/resultados_estatisticos.md` §0 |
+| **1. Pergunta** | Pergunta de pesquisa ajustada ao que os dados medem | Relatório Final §1 |
+| **2. Revisão do conhecimento** | Mapeamento de 6 bases oficiais; posicionamento frente a estudos que já usam a PNS | Anexo A, Anexo F |
+| **3. Hipóteses** | H1 primária + secundárias + exploratórias (abaixo) | `codigo/analise_estatistica.py` (cabeçalho) |
+| **4. Operacionalização** | Cada construto ligado a uma variável oficial, com códigos conferidos contra o dicionário do IBGE | `codigo/preparacao_dos_dados.py`, Anexo A §3 |
+| **5. Coleta** | Fonte primária (FTP do IBGE), com integridade registrada (SHA-256 do arquivo) | `resultados/tabelas/relatorio_preparacao_dos_dados.json` |
+| **6. Validação da medida** | Reproduzimos as **duas** prevalências oficiais publicadas (seção 5) | `resultados/tabelas/resultados_estatisticos.md` §0 |
 | **7. Análise** | Medida de efeito adequada (RP), desenho amostral, confundidores via DAG, testes formais, robustez | §4 deste documento |
-| **8. Inferência** | Força de evidência graduada por afirmação; associação ≠ causalidade | `Dossie_Evidencias_Quantitativas.md` |
-| **9. Comunicação** | STROBE, limitações, agenda de pesquisa | este documento + `docs/05` |
-| **10. Reprodutibilidade** | Código aberto, testes, versões fixadas, hash dos dados | `tests/`, `requirements.txt` |
+| **8. Inferência** | Força de evidência graduada por afirmação; associação ≠ causalidade | `RELATORIO_FINAL_DA_PESQUISA.md` |
+| **9. Comunicação** | STROBE, limitações, agenda de pesquisa | este documento + Anexo F |
+| **10. Reprodutibilidade** | Código aberto, testes, versões fixadas, hash dos dados | `codigo/testes/`, `requirements.txt` |
 
 ### Hierarquia de hipóteses
 
@@ -55,7 +55,7 @@ A área de "telas e saúde mental" é conhecida por resultados que dependem das 
 | Momento | Decisões |
 |---|---|
 | **Antes de ver os dados** | Base (PNS 2019), exposição (P04502), desfechos (PHQ-9, N013, Q11006), recortes por sexo e idade, uso de pesos, correlações de Pearson/Spearman (pedidas no plano original) |
-| **Depois da 1ª rodada** (ainda na versão do Dossiê v1) | Modelo por categorias de tela (revelou a curva em J), sensibilidade só com usuários, perfil por faixa de tela, narrativa do limiar de 3h, modelos por faixa etária |
+| **Depois da 1ª rodada** (versão preliminar) | Modelo por categorias de tela (revelou a curva em J), sensibilidade só com usuários, perfil por faixa de tela, narrativa do limiar de 3h, modelos por faixa etária |
 | **Nesta revisão** | Troca de OR por RP, desenho completo, testes formais de tendência e não linearidade, FDR, interação aditiva, E-value, modelo estendido, PHQ-9 por algoritmo, specification curve |
 
 **Consequência:** o limiar de 3h é **exploratório**. A *specification curve* (seção 4.6) mostra que a direção da associação não depende das escolhas feitas, mas **o ponto exato do limiar não foi pré-especificado**. O próprio IBGE usa "3 horas ou mais" como indicador para **TV** na publicação da PNS 2019. Não encontramos indicador oficial equivalente para celular/computador.
@@ -90,7 +90,7 @@ Todos os modelos usam estrato (V0024), UPA (8.027 UPAs) e peso calibrado (V00291
 
 ### 4.4 ⚠️ Conclusão corrigida nº 1 — idade
 
-O Dossiê v1 dizia que "entre usuários jovens, cada faixa a mais de tela aumenta em 20% as chances". Com o teste formal de interação:
+A versão preliminar dizia que "entre usuários jovens, cada faixa a mais de tela aumenta em 20% as chances". Com o teste formal de interação:
 
 | | 25+ anos | 15–24 anos | Interação |
 |---|---|---|---|
@@ -138,26 +138,26 @@ Antes, avaliamos só a escala multiplicativa e concluímos "efeito igual nos doi
 
 | # | Item | Status | Onde |
 |---|---|---|---|
-| 1 | Título e resumo indicam o desenho | 🟡 | Dossiê (falta resumo estruturado) |
-| 2 | Contexto e justificativa científica | 🟡 | `docs/05` (revisão estruturada pendente) |
+| 1 | Título e resumo indicam o desenho | 🟡 | Relatório Final (resumo e abstract) |
+| 2 | Contexto e justificativa científica | 🟡 | Anexo F (revisão estruturada pendente) |
 | 3 | Objetivos e hipóteses | ✅ | §2 |
 | 4 | Desenho do estudo | ✅ | Transversal, dados secundários da PNS 2019 |
-| 5 | Contexto (locais, períodos) | ✅ | `docs/01`; Stopa et al., 2020 |
+| 5 | Contexto (locais, períodos) | ✅ | Anexo A; Stopa et al., 2020 |
 | 6 | Participantes e critérios de seleção | ✅ | ETL: morador selecionado, entrevista realizada, 15+ |
-| 7 | Variáveis (desfechos, exposição, confundidores, modificadores) | ✅ | `docs/01` §3; DAG §7 |
+| 7 | Variáveis (desfechos, exposição, confundidores, modificadores) | ✅ | Anexo A §3; DAG §7 |
 | 8 | Fontes de dados e mensuração | ✅ | Dicionário IBGE; PHQ-9 validado no Brasil (Santos et al., 2013) |
 | 9 | Vieses | ✅ | §8 deste documento |
 | 10 | Tamanho do estudo | ✅ | 90.846 (toda a amostra elegível) |
 | 11 | Variáveis quantitativas (agrupamentos) | ✅ | Faixas oficiais do IBGE para tela; PHQ-9 0–27 e ≥ 10 |
 | 12 | Métodos estatísticos (confundimento, subgrupos, faltantes, desenho, sensibilidade) | ✅ | §4; faltantes: 22 sem renda e 10 sem cor/raça (análise de casos completos) |
-| 13 | Participantes em cada etapa (fluxo) | ✅ | Dossiê §3 |
+| 13 | Participantes em cada etapa (fluxo) | ✅ | Relatório Final §3 |
 | 14 | Dados descritivos, faltantes por variável | ✅ | `etl_relatorio.json`; perfil por faixa de tela |
 | 15 | Dados de desfecho | ✅ | Prevalências ponderadas |
 | 16 | Resultados principais: brutos e ajustados, limites das categorias, risco absoluto | ✅ | `resultados_estatisticos.md` §1 (bruta, ajustada, estendida) + prevalências em % |
 | 17 | Outras análises (subgrupos, interações, sensibilidade) | ✅ | §4.4–4.6 |
-| 18 | Principais resultados | ✅ | Dossiê §1 |
+| 18 | Principais resultados | ✅ | Relatório Final §4 |
 | 19 | Limitações | ✅ | §8 |
-| 20 | Interpretação cautelosa e comparação com a literatura | 🟡 | Comparação parcial em `docs/05` |
+| 20 | Interpretação cautelosa e comparação com a literatura | 🟡 | Comparação parcial em Anexo F |
 | 21 | Generalização | ✅ | Representativo de ~168 milhões de brasileiros 15+ em 2019 |
 | 22 | Financiamento | ✅ | Sem financiamento |
 
@@ -185,7 +185,7 @@ graph LR
 
 - **Ajustados (confundidores):** idade, sexo, escolaridade, renda, zona; no modelo estendido, também estado civil, ocupação e região. TV entra como co-exposição de tela.
 - **Não ajustado de propósito:** **sono**. Ele é provável **mediador** (tela → menos sono → sintomas). Ajustá-lo removeria parte do efeito que queremos medir.
-- **Não controlável neste desenho:** a seta tracejada (**causalidade reversa**). Só um estudo longitudinal resolve isso (`docs/05`).
+- **Não controlável neste desenho:** a seta tracejada (**causalidade reversa**). Só um estudo longitudinal resolve isso (Anexo F).
 
 ---
 
@@ -223,8 +223,8 @@ Cada construto da pergunta, confrontado com o que a PNS realmente mede:
 
 | Opção | Redação | Prós | Contras |
 |---|---|---|---|
-| **A — manter** | Pergunta atual, com a força de evidência de cada construto declarada no Dossiê | Preserva o tema da equipe (ansiedade) e o alinhamento com o subtema oficial | A ansiedade, foco da pergunta, é o achado mais frágil |
-| **B — ampliar o desfecho** | "…influencia a **saúde mental** — sintomas depressivos, ansiedade — e a **capacidade de concentração** nas atividades do dia a dia…" | Alinha a pergunta à evidência mais forte sem abandonar a ansiedade; continua dentro do subtema oficial | Pequena mudança de foco a comunicar à equipe e ao Grupo 2 |
+| **A — manter** | Pergunta atual, com a força de evidência de cada construto declarada no Relatório Final | Preserva o tema da equipe (ansiedade) e o alinhamento com o subtema oficial | A ansiedade, foco da pergunta, é o achado mais frágil |
+| **B — ampliar o desfecho** | "…influencia a **saúde mental** — sintomas depressivos, ansiedade — e a **capacidade de concentração** nas atividades do dia a dia…" | Alinha a pergunta à evidência mais forte sem abandonar a ansiedade; continua dentro do subtema oficial | Pequena mudança de foco a registrar no relatório |
 
 O que **não** recomendamos: tirar "ansiedade" da pergunta. O subtema e o tema da equipe giram em torno dela, e a evidência, mesmo fraca, aponta na mesma direção.
 
@@ -234,7 +234,7 @@ A redação adotada preserva as premissas originais: **uso intenso de telas** (c
 
 > *"Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia a saúde mental, em especial a ansiedade e os sintomas depressivos, e o déficit de atenção nas atividades do dia a dia, e que padrões de dados podem indicar caminhos para uma relação mais saudável com a tecnologia?"*
 
-| Construto da pergunta | Evidência (Dossiê v2) |
+| Construto da pergunta | Evidência (Relatório Final) |
 |---|---|
 | Saúde mental → sintomas depressivos | 🟢 Forte |
 | Saúde mental → ansiedade | 🟠 Fraca a moderada (medida ampla) |

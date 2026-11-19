@@ -1,6 +1,6 @@
-# Passo 1 — Data Discovery (mapeamento de metadados e dicionários)
+# Anexo A — Seleção da Base de Dados (mapeamento de metadados e dicionários)
 
-**Projeto de Extensão IESB · Grupo 1 (Problem Space) · ODS 3 (+ ODS 5 condicional)**
+**Projeto de Extensão IESB · Trilha de Pesquisa · Saúde Mental · ODS 3 e ODS 5** · [← Relatório Final](../RELATORIO_FINAL_DA_PESQUISA.md)
 **Pergunta:** *Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia a saúde mental, em especial a ansiedade e os sintomas depressivos, e o déficit de atenção na sociedade contemporânea?*
 
 ---
@@ -20,14 +20,14 @@
 |---|---|---|---|---|
 | **PNS 2019 (IBGE)** | ✅ P04502 (celular/tablet/PC para lazer: "redes sociais, notícias, vídeos, jogar") + P04501 (TV) | ✅ PHQ-9 completo (N010–N018), diagnósticos Q092 e Q11006 | ✅ | **ESCOLHIDA** |
 | **PeNSE 2019 (IBGE)** | ✅ tempo diário em redes sociais, tempo de tela | ✅ módulo novo de saúde mental (tristeza, irritação, preocupação, "a vida não vale a pena", sono) | ✅ | **Plano B (pivot)**: só escolares de 13–17 anos e itens não validados como escala clínica. Códigos das colunas não puderam ser verificados nesta sessão (FTP do IBGE bloqueado). |
-| **TIC Kids Online Brasil (Cetic.br)** | ✅ uso intenso de internet; em 2024, 24% de 9–17 anos "gostariam de passar menos tempo conectados, mas não conseguem" | ⚠️ só indicadores de uso excessivo e experiências online (ofensas, discriminação); **sem escala de ansiedade ou atenção** | ✅ | Usar como **contexto** no Dossiê (prevalência de uso compulsivo), não como base de correlação. |
+| **TIC Kids Online Brasil (Cetic.br)** | ✅ uso intenso de internet; em 2024, 24% de 9–17 anos "gostariam de passar menos tempo conectados, mas não conseguem" | ⚠️ só indicadores de uso excessivo e experiências online (ofensas, discriminação); **sem escala de ansiedade ou atenção** | ✅ | Usada como **contexto** no Relatório Final (prevalência de uso compulsivo), não como base de correlação. |
 | **TIC Domicílios (Cetic.br)** | ✅ | ❌ | — | Descartada: não mede saúde mental. |
 | **TIC Saúde (Cetic.br)** | ❌ (mede digitalização de estabelecimentos de saúde) | ❌ | — | Descartada: a unidade de análise são estabelecimentos e profissionais, não pessoas. |
 | **DATASUS (SIA/RAAS-Psicossocial)** | ❌ | ✅ atendimentos por CID F40/F41 (ansiedade) e F90 (TDAH) | ❌ | Descartada para correlação (sem exposição a telas); útil como **série temporal de contexto**, como fez a Folha de S.Paulo ("Geração Ansiosa" no Brasil). |
 
 ## 3. Colunas exatas selecionadas (layout oficial PNS 2019, versão 20220525)
 
-Posições conferidas com o layout publicado pelo IBGE (reproduzido em `datazoompuc/datazoom_social_Stata/PNS/dct/pns2019.dct` e no `schema.yml` da Base dos Dados). O `etl_processor.py` volta a conferir tudo contra o `input_PNS_2019.txt` oficial quando ele estiver em `data/raw/`.
+Posições conferidas com o layout publicado pelo IBGE (reproduzido em `datazoompuc/datazoom_social_Stata/PNS/dct/pns2019.dct` e no `schema.yml` da Base dos Dados). O `codigo/preparacao_dos_dados.py` volta a conferir tudo contra o `input_PNS_2019.txt` oficial quando ele estiver em `dados/brutos/`.
 
 ### 3.1 Feature — tecnologia (Módulo P, estilo de vida)
 
@@ -76,10 +76,10 @@ Respostas: 1 nenhum dia · 2 menos da metade dos dias · 3 mais da metade dos di
 | V00291 | 1426 | **Peso do morador selecionado com calibração** (todas as estimativas populacionais) |
 | V0024 / UPA_PNS | 3 / 10 | Estrato e conglomerado, para erros-padrão corretos |
 
-## 4. Limitações conhecidas (precisam constar no Dossiê)
+## 4. Limitações conhecidas (declaradas no Relatório Final)
 
 1. **Não existe escala de ansiedade validada (GAD-7) na PNS 2019.** A ansiedade é medida por (a) diagnóstico autorreferido Q11006, que agrupa ansiedade com outros transtornos, e (b) itens do PHQ-9 de agitação (N015), sono (N010) e concentração (N013). O PHQ-9 é, a rigor, um instrumento de **depressão**.
-2. **P04502 não isola "conteúdo curto".** A pergunta soma redes sociais, notícias, vídeos e jogos. Nenhuma base oficial brasileira mede especificamente consumo de vídeos curtos (Reels/TikTok/Shorts). Isso precisa ser dito ao Grupo 2.
+2. **P04502 não isola "conteúdo curto".** A pergunta soma redes sociais, notícias, vídeos e jogos. Nenhuma base oficial brasileira mede especificamente consumo de vídeos curtos (Reels/TikTok/Shorts). Isso é declarado como limitação no Relatório Final.
 3. **Coleta em 2019**, antes da explosão do TikTok e dos Reels no Brasil (2020–2021) e da pandemia. É provável que os números atuais de exposição sejam maiores.
 4. **Estudo transversal:** o desenho prova **associação**, não **causalidade**. A causalidade reversa é plausível: pessoas ansiosas ou deprimidas podem usar mais telas como fuga.
 5. **N013 mede dificuldade de concentração** nas últimas duas semanas, não diagnóstico de TDAH.

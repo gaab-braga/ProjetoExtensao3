@@ -1,7 +1,7 @@
 """
-etl_processor.py — ETL dos microdados da PNS 2019 (IBGE) para o Dossiê de Evidências.
+preparacao_dos_dados.py — Preparação (ETL) dos microdados da PNS 2019 (IBGE).
 
-Projeto de Extensão IESB · Grupo 1 (Problem Space)
+Projeto de Extensão IESB · Trilha de Pesquisa · Saúde Mental
 Pergunta: como o uso intenso de telas para lazer (inclui redes sociais e vídeos curtos) influencia a saúde mental
 (ansiedade e sintomas depressivos) e o déficit de atenção?
 
@@ -10,12 +10,12 @@ Fonte oficial: IBGE — Pesquisa Nacional de Saúde 2019, microdados (arquivo de
   https://ftp.ibge.gov.br/PNS/2019/Microdados/Documentacao/  (dicionário + input SAS)
 
 Uso:
-  python etl_processor.py                                   # usa data/raw/PNS_2019.txt (ou o .zip do IBGE)
-  python etl_processor.py --raw caminho/PNS_2019_20220525.zip --input data/raw/input_PNS_2019.txt
+  python codigo/preparacao_dos_dados.py                     # usa dados/brutos/PNS_2019*.zip (ou .txt)
+  python codigo/preparacao_dos_dados.py --raw caminho/PNS_2019_20220525.zip --input dados/brutos/input_PNS_2019.txt
 
 Saídas:
-  data/processed/pns2019_telas_saude_mental.csv   (1 linha por morador selecionado com entrevista realizada)
-  data/processed/etl_relatorio.json               (contagens de cada etapa, nulos, distribuição de códigos)
+  dados/processados/pns2019_telas_saude_mental.csv       (1 linha por morador selecionado com entrevista realizada)
+  resultados/tabelas/relatorio_preparacao_dos_dados.json (contagens de cada etapa, nulos, distribuição de códigos)
 """
 from __future__ import annotations
 
@@ -31,9 +31,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parent
-RAW_DIR = ROOT / "data" / "raw"
-OUT_DIR = ROOT / "data" / "processed"
+ROOT = Path(__file__).resolve().parent.parent          # raiz do repositório
+RAW_DIR = ROOT / "dados" / "brutos"
+OUT_DIR = ROOT / "dados" / "processados"
+TAB_DIR = ROOT / "resultados" / "tabelas"
 
 # ---------------------------------------------------------------------------
 # 1. LAYOUT — posição inicial (1-indexada) e largura de cada variável no PNS_2019.txt.
@@ -136,9 +137,9 @@ def localizar_bruto(caminho: Path | None) -> Path:
     candidatos = sorted(RAW_DIR.glob("PNS_2019*.txt")) + sorted(RAW_DIR.glob("PNS_2019*.zip"))
     if not candidatos:
         sys.exit(
-            "[ERRO] Microdados não encontrados em data/raw/.\n"
+            "[ERRO] Microdados não encontrados em dados/brutos/.\n"
             "Baixe https://ftp.ibge.gov.br/PNS/2019/Microdados/Dados/ (arquivo PNS_2019_*.zip)\n"
-            "e coloque o .zip (ou o PNS_2019.txt extraído) em data/raw/."
+            "e coloque o .zip (ou o PNS_2019.txt extraído) em dados/brutos/."
         )
     return candidatos[0]
 
@@ -325,7 +326,8 @@ def main() -> None:
     final = transformar(df, rel)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     final.to_csv(args.out, index=False)
-    (args.out.parent / "etl_relatorio.json").write_text(json.dumps(rel, ensure_ascii=False, indent=2))
+    TAB_DIR.mkdir(parents=True, exist_ok=True)
+    (TAB_DIR / "relatorio_preparacao_dos_dados.json").write_text(json.dumps(rel, ensure_ascii=False, indent=2))
 
     print("[OK] Etapas do ETL:")
     for k, v in rel["etapas"].items():
