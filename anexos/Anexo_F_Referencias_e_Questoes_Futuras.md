@@ -57,6 +57,8 @@ Este documento é intencionalmente **aberto**. Ele registra o que os dados da PN
 
 ## Referências (todas verificadas)
 
+A literatura recente correlacionada (2021–2025), os periódicos consultados e os fichamentos estão no [Anexo G](Anexo_G_Literatura_Periodicos_e_Fichamentos.md).
+
 - BARROS, A. J. D.; HIRAKATA, V. N. Alternatives for logistic regression in cross-sectional studies: an empirical comparison of models that directly estimate the prevalence ratio. *BMC Medical Research Methodology*, v. 3, art. 21, 2003.
 - BONETT, D. G.; WRIGHT, T. A. Sample size requirements for estimating Pearson, Kendall and Spearman correlations. *Psychometrika*, v. 65, n. 1, p. 23–28, 2000.
 - BRASIL. Conselho Nacional de Saúde. Resolução nº 510, de 7 de abril de 2016.
@@ -73,7 +75,7 @@ Este documento é intencionalmente **aberto**. Ele registra o que os dados da PN
 - ORBEN, A.; PRZYBYLSKI, A. K. The association between adolescent well-being and digital technology use. *Nature Human Behaviour*, v. 3, p. 173–182, 2019.
 - PRZYBYLSKI, A. K.; WEINSTEIN, N. A large-scale test of the Goldilocks hypothesis. *Psychological Science*, v. 28, n. 2, p. 204–215, 2017.
 - SANTOS, I. S. et al. Sensibilidade e especificidade do Patient Health Questionnaire-9 (PHQ-9) entre adultos da população geral. *Cadernos de Saúde Pública*, v. 29, n. 8, p. 1533–1543, 2013.
-- SILVA et al. Correlates of screen-based behaviors among adults from the 2019 Brazilian National Health Survey. *BMC Public Health*, 2021.
+- SILVA, D. R. et al. Correlates of screen-based behaviors among adults from the 2019 Brazilian National Health Survey. *BMC Public Health*, v. 21, art. 2289, 2021.
 - SIMONSOHN, U.; SIMMONS, J. P.; NELSON, L. D. Specification curve analysis. *Nature Human Behaviour*, v. 4, p. 1208–1214, 2020.
 - STOPA, S. R. et al. Pesquisa Nacional de Saúde 2019: histórico, métodos e perspectivas. *Epidemiologia e Serviços de Saúde*, v. 29, n. 5, e2020315, 2020.
 - VANDERWEELE, T. J.; DING, P. Sensitivity analysis in observational research: introducing the E-value. *Annals of Internal Medicine*, v. 167, n. 4, p. 268–274, 2017.
