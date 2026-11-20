@@ -12,7 +12,7 @@ Pesquisa com os microdados oficiais da Pesquisa Nacional de Saúde 2019 (IBGE), 
 ### ➜ [**RELATORIO_FINAL_DA_PESQUISA.pdf**](RELATORIO_FINAL_DA_PESQUISA.pdf) — o documento oficial da pesquisa, de ponta a ponta
 Versão para leitura no navegador: [`RELATORIO_FINAL_DA_PESQUISA.md`](RELATORIO_FINAL_DA_PESQUISA.md)
 
-O relatório contém resumo, introdução, objetivos e hipóteses, métodos, resultados (Figuras 1 a 6), discussão, limitações, conclusão e referências. Cada seção indica o arquivo que a sustenta.
+O relatório contém resumo, introdução (com o Mapa do Projeto), objetivos e hipóteses, métodos, resultados (Figuras 1 a 6), discussão, limitações, conclusão e referências. Cada seção indica o arquivo que a sustenta.
 
 **Pergunta de pesquisa:** *Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia a saúde mental, em especial a ansiedade e os sintomas depressivos, e o déficit de atenção na sociedade contemporânea?*
 
@@ -25,16 +25,17 @@ O relatório contém resumo, introdução, objetivos e hipóteses, métodos, res
 | Pasta / arquivo | Conteúdo |
 |---|---|
 | **`RELATORIO_FINAL_DA_PESQUISA.pdf`** | Documento oficial (com figuras) |
-| **`anexos/`** | Anexos A a F, citados no relatório |
+| **`anexos/`** | Anexos A a G, citados no relatório |
 | &nbsp;&nbsp;`Anexo_A_Selecao_da_Base_de_Dados.md` | Bases avaliadas e variáveis escolhidas |
 | &nbsp;&nbsp;`Anexo_B_Obtencao_e_Preparacao_dos_Dados.md` | Origem dos dados e procedimento replicável |
 | &nbsp;&nbsp;`Anexo_C_Rigor_Metodologico.md` | Método científico, STROBE, ética, histórico das decisões |
 | &nbsp;&nbsp;`Anexo_D_Arvore_de_Problemas.md` | Causas e efeitos do problema |
 | &nbsp;&nbsp;`Anexo_E_Perfil_do_Publico_Alvo.md` | Retrato estatístico do público mais exposto |
 | &nbsp;&nbsp;`Anexo_F_Referencias_e_Questoes_Futuras.md` | Referências completas e perguntas para estudos futuros |
-| **`resultados/figuras/`** | `Figura_1_…` a `Figura_6_…`, na ordem do relatório |
+| &nbsp;&nbsp;`Anexo_G_Literatura_Periodicos_e_Fichamentos.md` | Periódicos consultados, artigos correlacionados e fichamentos |
+| **`resultados/figuras/`** | `Mapa_do_Projeto.png` e `Figura_1_…` a `Figura_6_…`, na ordem do relatório |
 | **`resultados/tabelas/`** | Todas as tabelas (`resultados_estatisticos.md`), indicadores em planilha (`indicadores_por_grupo.csv`) e registro da preparação dos dados |
-| **`codigo/`** | `preparacao_dos_dados.py` → `analise_estatistica.py` (+ `metodos_amostrais.py` e `testes/`) |
+| **`codigo/`** | `preparacao_dos_dados.py` → `analise_estatistica.py` (+ `metodos_amostrais.py` e `testes/`); `mapa_do_projeto.py` gera o Mapa do Projeto |
 | **`dados/`** | Pasta local para os microdados do IBGE (não versionados; ver Anexo B) |
 
 ## 🔁 Reprodutibilidade
@@ -44,6 +45,7 @@ pip install -r codigo/requirements.txt
 python -m pytest codigo/testes
 python codigo/preparacao_dos_dados.py
 python codigo/analise_estatistica.py
+python codigo/mapa_do_projeto.py
 ```
 
 Instruções para baixar os microdados do IBGE: [Anexo B](anexos/Anexo_B_Obtencao_e_Preparacao_dos_Dados.md).

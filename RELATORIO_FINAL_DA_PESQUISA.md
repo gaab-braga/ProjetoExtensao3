@@ -37,11 +37,19 @@ A Organização Mundial da Saúde define saúde mental como um estado de bem-est
 
 Com base nessa pesquisa, Melo et al. (2023) estimaram que 10,8% dos brasileiros adultos apresentam rastreio positivo para depressão. Ao mesmo tempo, o uso de telas no lazer tornou-se parte do cotidiano, e estudos com a mesma base associaram comportamentos de tela a sintomas depressivos (SILVA et al., 2021). O tema mobiliza um debate internacional: Haidt (2024) atribui o aumento do sofrimento entre jovens ao uso de smartphones e redes sociais, enquanto Odgers (2024) argumenta que a evidência disponível não sustenta uma relação de causa.
 
+A literatura recente ajuda a dimensionar esse debate. Em revisão sistemática de 50 estudos, Santos et al. (2023) concluíram que o tempo excessivo de tela em adolescentes parece associado a problemas de saúde mental, com maior risco de depressão entre as meninas que usam redes sociais. A metanálise de Liu et al. (2022) estimou que cada hora diária adicional em redes sociais se associa a uma chance 13% maior de depressão em adolescentes, com associação mais forte entre as meninas. Quanto à atenção, Thorell et al. (2024) encontraram, em 28 estudos longitudinais, relações nos dois sentidos entre o uso de mídias digitais e sintomas de TDAH. Já a revisão de estudos longitudinais de Tang et al. (2021) estimou efeitos pequenos ou muito pequenos, o que mantém em aberto a magnitude e a direção dessas associações. Ainda assim, o tema chegou às políticas públicas: o Surgeon General dos Estados Unidos alertou que adolescentes que passam mais de três horas por dia em redes sociais têm o dobro do risco de sintomas de depressão e ansiedade (UNITED STATES, 2023), e, no Brasil, 93% das crianças e adolescentes de 9 a 17 anos já usam a internet (CGI.BR, 2025).
+
 Diante desse cenário, esta pesquisa busca responder à seguinte questão:
 
 > **Como o uso intenso de telas para lazer — que inclui redes sociais e vídeos curtos — influencia a saúde mental, em especial a ansiedade e os sintomas depressivos, e o déficit de atenção na sociedade contemporânea?**
 
-A pesquisa se justifica pela necessidade de substituir impressões por evidências representativas da população brasileira, capazes de orientar ações de promoção da saúde mental (ODS 3, meta 3.4) e de considerar desigualdades de gênero (ODS 5).
+A pesquisa se justifica pela necessidade de substituir impressões por evidências representativas da população brasileira, capazes de orientar ações de promoção da saúde mental (ODS 3, meta 3.4) e de considerar desigualdades de gênero (ODS 5). Seu objetivo é analisar a associação entre o tempo de tela no lazer e a saúde mental dos brasileiros com 15 anos ou mais, identificando a partir de que nível de uso essa associação aparece e quais grupos são mais afetados.
+
+O mapa a seguir resume o percurso do projeto, dos cursos do grupo até a questão de pesquisa.
+
+![Mapa do Projeto](resultados/figuras/Mapa_do_Projeto.png)
+
+*Mapa do Projeto — dos cursos de graduação à questão de pesquisa. Arquivo: `resultados/figuras/Mapa_do_Projeto.png` (gerado por `codigo/mapa_do_projeto.py`).*
 
 ## 2. Objetivos e hipóteses
 
@@ -215,7 +223,9 @@ O estudo demonstrou que a relação entre tempo de tela e saúde mental **não �
 
 O efeito, embora consistente, é moderado em escala individual, o que dialoga com Orben e Przybylski (2019), que encontraram associações pequenas entre tecnologia e bem-estar em adolescentes. Ainda assim, a relevância populacional é grande: **40,8 milhões** de brasileiros usam telas no lazer por 3 horas ou mais por dia, **16,6 milhões** por 6 horas ou mais, e entre estes últimos **2,4 milhões** têm rastreio positivo para depressão.
 
-Os resultados apoiam a preocupação com o uso intenso (HAIDT, 2024), mas, por virem de um estudo transversal, não permitem afirmar que as telas causam os sintomas, cautela defendida por Odgers (2024). Por fim, a carga 2,5 vezes maior entre mulheres reforça que a saúde mental também é uma questão de desigualdade de gênero (ODS 5).
+O limiar exploratório de cerca de 3 horas fica próximo do patamar que o Surgeon General dos Estados Unidos destacou para redes sociais entre adolescentes (UNITED STATES, 2023), embora as medidas e as populações sejam diferentes. Na escala relativa, porém, não encontramos efeito mais forte entre as mulheres, ao contrário do que Liu et al. (2022) observaram entre meninas adolescentes; a diferença pode refletir a faixa etária mais ampla e o fato de a PNS medir o tempo total de tela, e não apenas o de redes sociais. A associação com a dificuldade de concentração é coerente com as relações entre mídias digitais e sintomas de desatenção descritas por Thorell et al. (2024).
+
+Os resultados apoiam a preocupação com o uso intenso (HAIDT, 2024), mas, por virem de um estudo transversal, não permitem afirmar que as telas causam os sintomas, cautela defendida por Odgers (2024) e coerente com os efeitos pequenos encontrados em estudos longitudinais (TANG et al., 2021). Por fim, a carga 2,5 vezes maior entre mulheres reforça que a saúde mental também é uma questão de desigualdade de gênero (ODS 5).
 
 ## 6. Limitações
 
@@ -241,7 +251,7 @@ Com dados oficiais de 90.846 pessoas, concluiu-se que o uso moderado de telas pa
 4. **Sono e concentração** são queixas frequentes e concretas, úteis para comunicar o tema.
 5. **Limites éticos:** ações de extensão promovem saúde e informam; não fazem diagnóstico nem avaliação clínica, e devem indicar a rede de apoio (CVV 188, UBS, CAPS).
 
-As causas e os efeitos do problema estão organizados no [Anexo D](anexos/Anexo_D_Arvore_de_Problemas.md), e as questões para estudos futuros, no [Anexo F](anexos/Anexo_F_Referencias_e_Questoes_Futuras.md).
+As causas e os efeitos do problema estão organizados no [Anexo D](anexos/Anexo_D_Arvore_de_Problemas.md), as questões para estudos futuros, no [Anexo F](anexos/Anexo_F_Referencias_e_Questoes_Futuras.md), e os fichamentos da literatura, no [Anexo G](anexos/Anexo_G_Literatura_Periodicos_e_Fichamentos.md).
 
 ## 8. Referências
 
@@ -249,19 +259,23 @@ BARROS, A. J. D.; HIRAKATA, V. N. Alternatives for logistic regression in cross-
 
 BRASIL. Conselho Nacional de Saúde. Resolução nº 510, de 7 de abril de 2016.
 
+CGI.BR — COMITÊ GESTOR DA INTERNET NO BRASIL. *Pesquisa sobre o uso da internet por crianças e adolescentes no Brasil: TIC Kids Online Brasil 2024*. São Paulo: CGI.br, 2025. Disponível em: https://cetic.br/media/docs/publicacoes/2/20250512154015/tic_kids_online_2024_resumo_executivo.pdf. Acesso em: 20 nov. 2026.
+
 HAIDT, J. *The anxious generation: how the great rewiring of childhood is causing an epidemic of mental illness*. 2024.
 
-IBGE. *Pesquisa Nacional de Saúde 2019: microdados*. Rio de Janeiro: IBGE, 2022. Disponível em: https://ftp.ibge.gov.br/PNS/2019/Microdados/.
+IBGE. *Pesquisa Nacional de Saúde 2019: microdados*. Rio de Janeiro: IBGE, 2022. Disponível em: https://ftp.ibge.gov.br/PNS/2019/Microdados/. Acesso em: 20 nov. 2026.
 
 KNOL, M. J.; VANDERWEELE, T. J. Recommendations for presenting analyses of effect modification and interaction. *International Journal of Epidemiology*, v. 41, n. 2, p. 514-520, 2012.
 
 KROENKE, K.; SPITZER, R. L.; WILLIAMS, J. B. The PHQ-9: validity of a brief depression severity measure. *Journal of General Internal Medicine*, v. 16, n. 9, p. 606-613, 2001.
 
+LIU, M. et al. Time spent on social media and risk of depression in adolescents: a dose–response meta-analysis. *International Journal of Environmental Research and Public Health*, v. 19, n. 9, art. 5164, 2022. Disponível em: https://www.mdpi.com/1660-4601/19/9/5164. Acesso em: 20 nov. 2026.
+
 LUMLEY, T. Analysis of complex survey samples. *Journal of Statistical Software*, v. 9, n. 1, p. 1-19, 2004.
 
-MELO, A. P. S. et al. Depression screening in a population-based study: Brazilian National Health Survey 2019. *Ciência & Saúde Coletiva*, v. 28, n. 4, p. 1163-1174, 2023.
+MELO, A. P. S. et al. Depression screening in a population-based study: Brazilian National Health Survey 2019. *Ciência & Saúde Coletiva*, v. 28, n. 4, p. 1163-1174, 2023. Disponível em: https://www.scielo.br/j/csc/a/wWKFtv8ZVZZTwVDM94Q3gFt/. Acesso em: 20 nov. 2026.
 
-ODGERS, C. L. [Resenha de *The anxious generation*, de J. Haidt]. *Nature*, 2024. Disponível em: https://www.nature.com/articles/d41586-024-00902-2.
+ODGERS, C. L. [Resenha de *The anxious generation*, de J. Haidt]. *Nature*, 2024. Disponível em: https://www.nature.com/articles/d41586-024-00902-2. Acesso em: 20 nov. 2026.
 
 ORBEN, A.; PRZYBYLSKI, A. K. The association between adolescent well-being and digital technology use. *Nature Human Behaviour*, v. 3, p. 173-182, 2019.
 
@@ -269,11 +283,19 @@ PRZYBYLSKI, A. K.; WEINSTEIN, N. A large-scale test of the Goldilocks hypothesis
 
 SANTOS, I. S. et al. Sensibilidade e especificidade do Patient Health Questionnaire-9 (PHQ-9) entre adultos da população geral. *Cadernos de Saúde Pública*, v. 29, n. 8, p. 1533-1543, 2013.
 
-SILVA et al. Correlates of screen-based behaviors among adults from the 2019 Brazilian National Health Survey. *BMC Public Health*, 2021.
+SANTOS, R. M. S. et al. The associations between screen time and mental health in adolescents: a systematic review. *BMC Psychology*, v. 11, art. 127, 2023. Disponível em: https://doi.org/10.1186/s40359-023-01166-7. Acesso em: 20 nov. 2026.
+
+SILVA, D. R. et al. Correlates of screen-based behaviors among adults from the 2019 Brazilian National Health Survey. *BMC Public Health*, v. 21, art. 2289, 2021. Disponível em: https://doi.org/10.1186/s12889-021-12340-0. Acesso em: 20 nov. 2026.
 
 SIMONSOHN, U.; SIMMONS, J. P.; NELSON, L. D. Specification curve analysis. *Nature Human Behaviour*, v. 4, p. 1208-1214, 2020.
 
 STOPA, S. R. et al. Pesquisa Nacional de Saúde 2019: histórico, métodos e perspectivas. *Epidemiologia e Serviços de Saúde*, v. 29, n. 5, e2020315, 2020.
+
+TANG, S. et al. The relationship between screen time and mental health in young people: a systematic review of longitudinal studies. *Clinical Psychology Review*, v. 86, art. 102021, 2021. Disponível em: https://pubmed.ncbi.nlm.nih.gov/33798997/. Acesso em: 20 nov. 2026.
+
+THORELL, L. B. et al. Longitudinal associations between digital media use and ADHD symptoms in children and adolescents: a systematic literature review. *European Child & Adolescent Psychiatry*, v. 33, n. 8, p. 2503-2526, 2024. Disponível em: https://doi.org/10.1007/s00787-022-02130-3. Acesso em: 20 nov. 2026.
+
+UNITED STATES. Office of the Surgeon General. *Social media and youth mental health: the U.S. Surgeon General's advisory*. Washington, DC: U.S. Department of Health and Human Services, 2023. Disponível em: https://www.hhs.gov/sites/default/files/sg-youth-mental-health-social-media-advisory.pdf. Acesso em: 20 nov. 2026.
 
 VANDERWEELE, T. J.; DING, P. Sensitivity analysis in observational research: introducing the E-value. *Annals of Internal Medicine*, v. 167, n. 4, p. 268-274, 2017.
 
@@ -293,6 +315,8 @@ WORLD HEALTH ORGANIZATION. *World mental health report: transforming mental heal
 | **Anexo D** — Árvore de problemas (causas e efeitos) | [`anexos/Anexo_D_Arvore_de_Problemas.md`](anexos/Anexo_D_Arvore_de_Problemas.md) |
 | **Anexo E** — Perfil do público-alvo | [`anexos/Anexo_E_Perfil_do_Publico_Alvo.md`](anexos/Anexo_E_Perfil_do_Publico_Alvo.md) |
 | **Anexo F** — Referências completas e questões futuras | [`anexos/Anexo_F_Referencias_e_Questoes_Futuras.md`](anexos/Anexo_F_Referencias_e_Questoes_Futuras.md) |
+| **Anexo G** — Periódicos consultados, artigos correlacionados e fichamentos | [`anexos/Anexo_G_Literatura_Periodicos_e_Fichamentos.md`](anexos/Anexo_G_Literatura_Periodicos_e_Fichamentos.md) |
+| **Mapa do Projeto** (seção 1) | [`resultados/figuras/Mapa_do_Projeto.png`](resultados/figuras/Mapa_do_Projeto.png) · gerado por [`codigo/mapa_do_projeto.py`](codigo/mapa_do_projeto.py) |
 | **Figuras 1 a 6** | [`resultados/figuras/`](resultados/figuras/) |
 | Todas as tabelas de resultados | [`resultados/tabelas/resultados_estatisticos.md`](resultados/tabelas/resultados_estatisticos.md) (versão de dados: `.json`) |
 | Indicadores por grupo (planilha) | [`resultados/tabelas/indicadores_por_grupo.csv`](resultados/tabelas/indicadores_por_grupo.csv) |
