@@ -121,7 +121,7 @@ Dados públicos e anonimizados, sem contato com participantes. A pesquisa enquad
 
 ## 4. Resultados
 
-### 4.1 A correlação simples é desprezível
+### 4.1 A correlação simples foi desprezível
 
 | Tempo de tela de lazer × | Spearman ρ | IC 95% |
 |---|---:|---|
@@ -134,13 +134,13 @@ Dados públicos e anonimizados, sem contato com participantes. A pesquisa enquad
 
 *Figura 1 — Correlação entre tempo de tela de lazer e sintomas. Arquivo: `resultados/figuras/Figura_1_Correlacao_tempo_de_tela_e_sintomas.png`.*
 
-A correlação é baixa por dois motivos. Primeiro, a relação não é linear (seção 4.2). Segundo, o tempo de tela tem forte correlação com a idade (ρ = −0,50, Figura 2): os grupos com mais sintomas, os que **não usam** telas (mais velhos e mais pobres) e os que usam **6h ou mais** (mais jovens), ficam em extremos opostos e "anulam" a reta.
+A correlação foi baixa por dois motivos. Primeiro, a relação não se mostrou linear (seção 4.2). Segundo, o tempo de tela apresentou forte correlação com a idade (ρ = −0,50, Figura 2): os grupos com mais sintomas, os que **não usavam** telas (mais velhos e mais pobres) e os que usavam **6h ou mais** (mais jovens), ficaram em extremos opostos e "anularam" a reta.
 
 ![Figura 2 — Matriz de correlações entre as variáveis](resultados/figuras/Figura_2_Matriz_de_correlacoes.png)
 
 *Figura 2 — Matriz de correlações entre as variáveis. Arquivo: `resultados/figuras/Figura_2_Matriz_de_correlacoes.png`.*
 
-### 4.2 Dose-resposta: o risco aparece acima de cerca de 3 horas por dia
+### 4.2 Dose-resposta: o risco apareceu acima de cerca de 3 horas por dia
 
 Razão de prevalência ajustada (referência: menos de 1h/dia), com desenho amostral completo (n = 90.824):
 
@@ -164,9 +164,9 @@ Razão de prevalência ajustada (referência: menos de 1h/dia), com desenho amos
 
 *Figura 3 — Dose-resposta: razão de prevalência por faixa de tempo de tela (acima da linha 1 = mais frequente que em quem usa menos de 1h). Arquivo: `resultados/figuras/Figura_3_Dose_resposta_limiar_de_3h.png`.*
 
-Até cerca de 3 horas por dia não há aumento de sintomas. Acima disso, a prevalência sobe nos três desfechos. O grupo que não usa telas também aparece acima de 1, efeito atribuível ao seu perfil (47% têm 60 anos ou mais e 67% vivem com até 1 salário mínimo por pessoa), e não à ausência de telas.
+Até cerca de 3 horas por dia não houve aumento de sintomas. Acima disso, a prevalência subiu nos três desfechos. O grupo que não usava telas também ficou acima de 1, efeito atribuível ao seu perfil (47% tinham 60 anos ou mais e 67% viviam com até 1 salário mínimo por pessoa), e não à ausência de telas.
 
-### 4.3 Idade: a exposição é jovem, o efeito é igual
+### 4.3 Idade: a exposição foi maior entre os jovens, e o efeito, igual
 
 | Indicador | 15–17 | 18–24 | 25–34 | 35–44 | 45–59 | 60+ |
 |---|---:|---:|---:|---:|---:|---:|
@@ -177,7 +177,7 @@ Até cerca de 3 horas por dia não há aumento de sintomas. Acima disso, a preva
 
 *Figura 4 — Exposição ao uso intenso e sintomas por faixa etária. Arquivo: `resultados/figuras/Figura_4_Exposicao_por_idade.png`.*
 
-O efeito do uso intenso foi semelhante entre jovens de 15–24 anos (RP 1,40) e pessoas com 25 anos ou mais (RP 1,34). A interação não foi significativa (p = 0,75). Os jovens são mais **expostos**, não mais sensíveis.
+O efeito do uso intenso foi semelhante entre jovens de 15–24 anos (RP 1,40) e pessoas com 25 anos ou mais (RP 1,34). A interação não foi significativa (p = 0,75). Os jovens mostraram-se mais **expostos**, não mais sensíveis.
 
 ### 4.4 Sexo (ODS 5)
 
@@ -193,7 +193,7 @@ O efeito do uso intenso foi semelhante entre jovens de 15–24 anos (RP 1,40) e 
 
 *Figura 5 — Sintomas por tempo de tela, homens e mulheres. Arquivo: `resultados/figuras/Figura_5_Comparacao_por_sexo.png`.*
 
-Homens e mulheres usam telas na mesma proporção, mas as mulheres carregam uma carga de sintomas 2,5 vezes maior. Na escala relativa, o efeito do uso intenso é semelhante (p = 0,37). Na escala absoluta, há indício de que ele some mais casos entre as mulheres (RERI = 0,48; diferença direta p = 0,052): o resultado é **sugestivo, não comprovado**.
+Homens e mulheres usavam telas na mesma proporção, mas as mulheres apresentaram uma carga de sintomas 2,5 vezes maior. Na escala relativa, o efeito do uso intenso foi semelhante (p = 0,37). Na escala absoluta, houve indício de que ele somasse mais casos entre as mulheres (RERI = 0,48; diferença direta p = 0,052): o resultado foi **sugestivo, não comprovado**.
 
 ### 4.5 Robustez
 
