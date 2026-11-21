@@ -32,7 +32,7 @@ O relatório contém resumo, introdução (com o Mapa do Projeto), objetivos e h
 | &nbsp;&nbsp;`Anexo_D_Arvore_de_Problemas.md` | Causas e efeitos do problema |
 | &nbsp;&nbsp;`Anexo_E_Perfil_do_Publico_Alvo.md` | Retrato estatístico do público mais exposto |
 | &nbsp;&nbsp;`Anexo_F_Referencias_e_Questoes_Futuras.md` | Referências completas e perguntas para estudos futuros |
-| &nbsp;&nbsp;`Anexo_G_Literatura_Periodicos_e_Fichamentos.md` | Periódicos consultados, artigos correlacionados e fichamentos |
+| &nbsp;&nbsp;`Anexo_G_Literatura_Periodicos_e_Fichamentos.md` | Periódicos consultados, artigos correlacionados, fichamentos e fichamento dos achados |
 | **`resultados/figuras/`** | `Mapa_do_Projeto.png` e `Figura_1_…` a `Figura_6_…`, na ordem do relatório |
 | **`resultados/tabelas/`** | Todas as tabelas (`resultados_estatisticos.md`), indicadores em planilha (`indicadores_por_grupo.csv`) e registro da preparação dos dados |
 | **`codigo/`** | `preparacao_dos_dados.py` → `analise_estatistica.py` (+ `metodos_amostrais.py` e `testes/`); `mapa_do_projeto.py` gera o Mapa do Projeto |
