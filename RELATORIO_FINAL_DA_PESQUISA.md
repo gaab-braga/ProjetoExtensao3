@@ -45,11 +45,11 @@ Diante desse cenário, esta pesquisa busca responder à seguinte questão:
 
 A pesquisa se justifica pela necessidade de substituir impressões por evidências representativas da população brasileira, capazes de orientar ações de promoção da saúde mental (ODS 3, meta 3.4) e de considerar desigualdades de gênero (ODS 5). Seu objetivo é analisar a associação entre o tempo de tela no lazer e a saúde mental dos brasileiros com 15 anos ou mais, identificando a partir de que nível de uso essa associação aparece e quais grupos são mais afetados.
 
-O mapa a seguir resume o percurso do projeto, dos cursos do grupo até a questão de pesquisa.
+O mapa a seguir resume o projeto: a questão de pesquisa ao centro, ligada aos cursos do grupo, aos tópicos, ao tema norteador e às tendências das áreas.
 
 ![Mapa do Projeto](resultados/figuras/Mapa_do_Projeto.png)
 
-*Mapa do Projeto — dos cursos de graduação à questão de pesquisa. Arquivo: `resultados/figuras/Mapa_do_Projeto.png` (gerado por `codigo/mapa_do_projeto.py`).*
+*Mapa do Projeto — a questão de pesquisa ao centro, ligada aos demais elementos. Arquivo: `resultados/figuras/Mapa_do_Projeto.png` (gerado por `codigo/mapa_do_projeto.py`).*
 
 ## 2. Objetivos e hipóteses
 
@@ -251,7 +251,7 @@ Com dados oficiais de 90.846 pessoas, concluiu-se que o uso moderado de telas pa
 4. **Sono e concentração** são queixas frequentes e concretas, úteis para comunicar o tema.
 5. **Limites éticos:** ações de extensão promovem saúde e informam; não fazem diagnóstico nem avaliação clínica, e devem indicar a rede de apoio (CVV 188, UBS, CAPS).
 
-As causas e os efeitos do problema estão organizados no [Anexo D](anexos/Anexo_D_Arvore_de_Problemas.md), as questões para estudos futuros, no [Anexo F](anexos/Anexo_F_Referencias_e_Questoes_Futuras.md), e os fichamentos da literatura, no [Anexo G](anexos/Anexo_G_Literatura_Periodicos_e_Fichamentos.md).
+As causas e os efeitos do problema estão organizados no [Anexo D](anexos/Anexo_D_Arvore_de_Problemas.md), as questões para estudos futuros, no [Anexo F](anexos/Anexo_F_Referencias_e_Questoes_Futuras.md), e os fichamentos da literatura e dos achados, no [Anexo G](anexos/Anexo_G_Literatura_Periodicos_e_Fichamentos.md).
 
 ## 8. Referências
 
@@ -315,7 +315,7 @@ WORLD HEALTH ORGANIZATION. *World mental health report: transforming mental heal
 | **Anexo D** — Árvore de problemas (causas e efeitos) | [`anexos/Anexo_D_Arvore_de_Problemas.md`](anexos/Anexo_D_Arvore_de_Problemas.md) |
 | **Anexo E** — Perfil do público-alvo | [`anexos/Anexo_E_Perfil_do_Publico_Alvo.md`](anexos/Anexo_E_Perfil_do_Publico_Alvo.md) |
 | **Anexo F** — Referências completas e questões futuras | [`anexos/Anexo_F_Referencias_e_Questoes_Futuras.md`](anexos/Anexo_F_Referencias_e_Questoes_Futuras.md) |
-| **Anexo G** — Periódicos consultados, artigos correlacionados e fichamentos | [`anexos/Anexo_G_Literatura_Periodicos_e_Fichamentos.md`](anexos/Anexo_G_Literatura_Periodicos_e_Fichamentos.md) |
+| **Anexo G** — Periódicos consultados, artigos correlacionados, fichamentos e fichamento dos achados | [`anexos/Anexo_G_Literatura_Periodicos_e_Fichamentos.md`](anexos/Anexo_G_Literatura_Periodicos_e_Fichamentos.md) |
 | **Mapa do Projeto** (seção 1) | [`resultados/figuras/Mapa_do_Projeto.png`](resultados/figuras/Mapa_do_Projeto.png) · gerado por [`codigo/mapa_do_projeto.py`](codigo/mapa_do_projeto.py) |
 | **Figuras 1 a 6** | [`resultados/figuras/`](resultados/figuras/) |
 | Todas as tabelas de resultados | [`resultados/tabelas/resultados_estatisticos.md`](resultados/tabelas/resultados_estatisticos.md) (versão de dados: `.json`) |

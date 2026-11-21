@@ -1,14 +1,15 @@
-# Anexo G — Literatura: Periódicos, Artigos Correlacionados e Fichamentos
+# Anexo G — Literatura, Fichamentos e Fichamento dos Achados
 
 **Projeto de Extensão IESB · Trilha de Pesquisa · Saúde Mental** · [← Relatório Final](../RELATORIO_FINAL_DA_PESQUISA.md)
 
-Este anexo reúne a base bibliográfica da pesquisa em três partes:
+Este anexo reúne a base bibliográfica e o registro dos achados da pesquisa em quatro partes:
 
 1. os **periódicos** (revistas científicas) e as fontes institucionais consultados;
 2. os **artigos correlacionados**, que mostram onde nossos resultados concordam com a literatura e onde ela traz ressalvas;
-3. os **fichamentos** dos principais estudos.
+3. os **fichamentos** dos principais estudos;
+4. o **fichamento dos achados**: temáticas, conclusões e aspectos confirmatórios e surpreendentes da própria pesquisa.
 
-Todos os dados bibliográficos e os resultados citados foram conferidos nas páginas oficiais dos artigos (editora, PubMed, SciELO ou DOI) em 20 de novembro de 2026. As referências completas, em ABNT, estão na [seção 4](#4-referências-deste-anexo).
+Todos os dados bibliográficos e os resultados citados foram conferidos nas páginas oficiais dos artigos (editora, PubMed, SciELO ou DOI) em 20 de novembro de 2026. As referências completas, em ABNT, estão na [seção 5](#5-referências-deste-anexo).
 
 ---
 
@@ -204,7 +205,58 @@ Os fichamentos abaixo são **de resumo com comentário crítico**. Cada ficha tr
 
 ---
 
-## 4. Referências deste anexo
+## 4. Fichamento dos achados
+
+No roteiro do DreamShaper, o **fichamento dos achados** registra o progresso da própria pesquisa: as temáticas trabalhadas, as principais conclusões e o que, nos resultados, **confirmou** o esperado ou **surpreendeu**. Os números vêm do [Relatório Final](../RELATORIO_FINAL_DA_PESQUISA.md), seção 4, e de [`resultados/tabelas/`](../resultados/tabelas/).
+
+### 4.1 Temáticas trabalhadas
+
+| Temática | O que foi investigado | Onde está |
+|---|---|---|
+| Uso de telas no lazer | Horas por dia de celular, tablet ou computador no tempo livre, por idade, sexo e renda | Relatório, seção 4.3 e Figura 4 |
+| Sintomas depressivos | Rastreio positivo pelo PHQ-9 (escore ≥ 10) | Relatório, seção 4.2 e Figura 3 |
+| Atenção e concentração | Dificuldade de concentração em mais da metade dos dias | Relatório, seção 4.2 |
+| Ansiedade | Diagnóstico autorreferido de ansiedade ou outro transtorno mental | Relatório, seção 4.2 |
+| Gênero (ODS 5) | Diferenças entre homens e mulheres, nas escalas relativa e absoluta | Relatório, seção 4.4 e Figura 5 |
+| Rigor e robustez | Desenho amostral, correção para múltiplas comparações, 144 análises alternativas, E-value | Relatório, seção 4.5 e Anexo C |
+| Literatura | Estudos que confirmam, matizam ou contestam os achados | Seções 2 e 3 deste anexo |
+
+### 4.2 Principais conclusões
+
+1. O uso de telas no lazer **até cerca de 3 horas por dia não se associa a mais sintomas**; acima disso, a prevalência sobe.
+2. Com **6 horas ou mais**, o rastreio positivo para depressão é **1,59 vez** mais frequente, e a dificuldade de concentração, **1,55 vez**.
+3. O uso intenso **concentra-se nos jovens**: 31,9% dos adolescentes de 15 a 17 anos usam telas por 6 horas ou mais, contra 13,5% das pessoas de 25 a 34 anos.
+4. As **mulheres** têm prevalência de sintomas depressivos **2,5 vezes maior** que a dos homens.
+5. Em escala populacional, são **16,6 milhões** de brasileiros com 6 horas ou mais por dia, dos quais **2,4 milhões** têm rastreio positivo para depressão.
+6. O estudo é transversal: os resultados mostram **associação, não causa**.
+
+### 4.3 Aspectos confirmatórios
+
+| Achado | O que ele confirma |
+|---|---|
+| Mais tempo de tela, mais sintomas depressivos entre os usuários (RP 1,12 por faixa de tempo) | Hipótese H1 e a dose-resposta descrita por Liu et al. (2022) |
+| Dificuldade de concentração 1,55 vez mais frequente com 6h ou mais | Hipótese H2 e a relação entre mídias digitais e desatenção (THORELL et al., 2024) |
+| Carga de sintomas depressivos 2,5 vezes maior entre mulheres | A desigualdade de gênero que motivou o recorte do ODS 5 |
+| Uso intenso concentrado nos jovens | A escolha do público prioritário (15 a 24 anos) e o contexto da TIC Kids Online (CGI.BR, 2025) |
+| 10,78% de rastreio positivo, contra 10,8% publicados por Melo et al. (2023) | A correção do processamento dos dados |
+| Associação presente em **144 de 144** análises alternativas | Que o resultado não depende de escolhas arbitrárias de análise |
+
+### 4.4 Aspectos surpreendentes
+
+| Achado | Por que surpreendeu | Como foi interpretado |
+|---|---|---|
+| A relação **não é linear**: nada muda até cerca de 3 horas e o risco sobe depois disso | Esperava-se uma subida contínua; o limiar não era hipótese prévia | É compatível com a hipótese Goldilocks (PRZYBYLSKI; WEINSTEIN, 2017) e próximo do patamar de 3 horas do Surgeon General (UNITED STATES, 2023). Fica registrado como resultado exploratório |
+| A correlação é **quase nula** (ρ = 0,02), embora a razão de prevalência com 6h ou mais seja 1,59 | Uma correlação tão baixa parecia indicar ausência de relação | A correlação mede só relações em linha reta, e o tempo de tela está muito ligado à idade (ρ = −0,50). Por isso a análise principal usou razões de prevalência por faixa |
+| **Quem não usa telas** também tem mais sintomas (RP 1,18) | Esperava-se o menor risco nesse grupo | O grupo é mais velho e mais pobre (47% têm 60 anos ou mais; 67% vivem com até 1 salário mínimo por pessoa). O excesso reflete esse perfil, não a ausência de telas |
+| O efeito **não é maior nos jovens** (H5 refutada; interação p = 0,745) | Esperava-se que os jovens fossem mais sensíveis | O que distingue os jovens é a **exposição**, muito maior, e não o efeito por hora de uso |
+| Na escala relativa, o efeito **não é maior nas mulheres** (p = 0,37) | Liu et al. (2022) encontraram efeito mais forte entre meninas | Há indício de **mais casos absolutos** entre as mulheres (interação aditiva no limite, p = 0,052). A PNS mede o tempo total de tela, em todas as idades a partir de 15 anos |
+| A associação com **ansiedade** foi só parcial | Esperava-se o mesmo padrão dos sintomas depressivos | Com 3 a 6 horas, a associação não resistiu à correção para múltiplas comparações (q = 0,07). A medida de ansiedade da PNS é um diagnóstico autorreferido, mais fraco que uma escala de sintomas |
+
+As perguntas que esses achados deixaram em aberto estão no [Anexo F](Anexo_F_Referencias_e_Questoes_Futuras.md).
+
+---
+
+## 5. Referências deste anexo
 
 As referências dos itens 1.1 e 3 que não aparecem abaixo estão completas no [Relatório Final](../RELATORIO_FINAL_DA_PESQUISA.md#8-referências).
 
