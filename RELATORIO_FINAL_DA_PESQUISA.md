@@ -241,7 +241,7 @@ Detalhamento dos vieses: [Anexo C](anexos/Anexo_C_Rigor_Metodologico.md), §8.
 
 ## 7. Conclusão e implicações práticas
 
-Com dados oficiais de 90.846 pessoas, concluiu-se que o uso moderado de telas para lazer, até cerca de 3 horas por dia, não está associado a mais sintomas. **O uso intenso está:** com 6 horas ou mais, sintomas depressivos e dificuldade de concentração são cerca de 1,6 vez mais frequentes. O uso intenso concentra-se nos jovens, e as mulheres carregam o dobro da carga de sofrimento.
+Com dados oficiais de 90.846 pessoas, concluiu-se que o uso moderado de telas para lazer, até cerca de 3 horas por dia, não está associado a mais sintomas. **O uso intenso está:** com 6 horas ou mais, sintomas depressivos e dificuldade de concentração são cerca de 1,6 vez mais frequentes. O uso intenso concentra-se nos jovens, e as mulheres carregam mais que o dobro da carga de sofrimento.
 
 **Implicações práticas:**
 
